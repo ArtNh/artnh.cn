@@ -357,7 +357,7 @@
             background-color: #d8c8aa;
         }
 
-        /* ── 卡片宇宙微弱漂浮包裹器 ── */
+        /* ── 卡片布局包裹器（不带漂浮动画，仅用于居中对齐） ── */
         .card-float-wrapper {
             display: flex;
             align-items: center;
@@ -365,26 +365,6 @@
             width: 100%;
             height: 100%;
             pointer-events: none; /* 防止包裹层拦截页面其他鼠标事件 */
-            animation: spaceFloat 18s ease-in-out infinite;
-        }
-
-        /* 强力强调宇宙空间失重浮沉：扩大平移范围，并加入更显著的 3D 深度缩放 (scale) 与旋转浮沉变化 */
-        @keyframes spaceFloat {
-            0% {
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
-            }
-            25% {
-                transform: translateY(-20px) translateX(12px) rotate(1.4deg) scale(0.975);
-            }
-            50% {
-                transform: translateY(16px) translateX(-10px) rotate(-1.2deg) scale(1.025);
-            }
-            75% {
-                transform: translateY(-8px) translateX(8px) rotate(0.8deg) scale(0.985);
-            }
-            100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
-            }
         }
 
         /* ── 原始网页主页极简链接条样式 ── */
@@ -796,17 +776,17 @@
                     const dy = my - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     
-                    if (dist < 350) {
-                        // 距离越近，受到的拉力稍微多一点，但保持极度克制，不喧宾夺主
-                        const force = (350 - dist) / 450000;
+                    if (dist < 420) {
+                        // 距离越近，受到的拉力稍微多一点，力度翻倍，使跟随感明显而柔和
+                        const force = (420 - dist) / 220000;
                         this.pullX += dx * force;
                         this.pullY += dy * force;
                     }
                 }
 
                 // 阻尼回弹，防止偏折失控
-                this.pullX *= 0.96;
-                this.pullY *= 0.96;
+                this.pullX *= 0.95;
+                this.pullY *= 0.95;
 
                 // 累加运动 (基本运动 + 引力偏移)
                 this.y += this.speedY + this.pullY;
@@ -837,9 +817,9 @@
             }
 
             draw() {
-                // 视差偏移
-                const offsetX = mouseX * this.size * 4;
-                const offsetY = mouseY * this.size * 4;
+                // 视差偏移（调大比例，实现柔和深邃的鼠标星海随动效果）
+                const offsetX = mouseX * this.size * 22;
+                const offsetY = mouseY * this.size * 22;
 
                 ctx.fillStyle = `rgba(240, 237, 232, ${this.alpha})`;
                 ctx.beginPath();
