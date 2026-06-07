@@ -365,45 +365,49 @@
             width: 100%;
             height: 100%;
             pointer-events: none; /* 防止包裹层拦截页面其他鼠标事件 */
-            animation: spaceFloat 18s ease-in-out infinite;
+            animation: spaceFloat 22s ease-in-out infinite;
         }
 
-        /* 强力强调宇宙空间失重浮沉：扩大平移范围，并加入更显著的 3D 深度缩放 (scale) 与旋转浮沉变化 */
+        /* 降低宇宙空间失重浮沉：缩小平移与旋转范围，降低缩放频率，使卡片漂浮感极度细微、缓慢且克制 */
         @keyframes spaceFloat {
             0% {
                 transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
             }
-            25% {
-                transform: translateY(-20px) translateX(12px) rotate(1.4deg) scale(0.975);
+            33% {
+                transform: translateY(-5px) translateX(1.5px) rotate(0.12deg) scale(0.997);
             }
-            50% {
-                transform: translateY(16px) translateX(-10px) rotate(-1.2deg) scale(1.025);
-            }
-            75% {
-                transform: translateY(-8px) translateX(8px) rotate(0.8deg) scale(0.985);
+            66% {
+                transform: translateY(3px) translateX(-1.5px) rotate(-0.1deg) scale(1.003);
             }
             100% {
                 transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
             }
         }
 
-        /* ── 原始网页主页极简链接条样式 ── */
-        .earth-link-container {
-            margin-top: 20px;
-            border-top: 1px solid var(--line);
-            border-bottom: 1px solid var(--line);
-            width: 100%;
+        /* ── 左上角返回地球板块固定定位样式 ── */
+        .back-to-earth-container {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 10;
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* 全屏探索模式激活时，返回板块淡出 */
+        .back-to-earth-container.fade-out {
+            opacity: 0 !important;
+            transform: translateY(-10px) !important;
+            pointer-events: none !important;
         }
 
         .earth-link {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 14px 0;
+            gap: 15px; /* 箭头与文本的高雅间距 */
             text-decoration: none;
             color: var(--fg);
             transition: color 0.25s;
-            width: 100%;
         }
 
         .earth-link:hover {
@@ -411,7 +415,7 @@
         }
 
         .earth-link:hover .earth-arrow {
-            transform: translate(4px, -4px);
+            transform: translateX(-4px); /* 悬浮时箭头优雅向左微移 */
             color: var(--accent);
         }
 
@@ -436,11 +440,10 @@
         }
 
         .earth-arrow {
-            font-size: 0.85rem;
-            color: #444;
+            font-size: 1.1rem;
+            color: #888; /* 提升可见对比度 */
             transition: transform 0.25s, color 0.25s;
             flex-shrink: 0;
-            margin-left: 10px;
         }
 
 
@@ -660,6 +663,17 @@
         <p class="nasa-desc">While observing the Sagittarius dwarf irregular galaxy, Hubble captured the trail of a faint asteroid that had drifted across the field of view. The trail is seen as a series of 18 reddish arcs on the right.</p>
     </div>
 
+    <!-- 左上角返回地球主页模块 -->
+    <div class="back-to-earth-container">
+        <a class="earth-link" href="index.html" title="返回主页">
+            <span class="earth-arrow">←</span>
+            <div class="earth-info">
+                <span class="earth-title">Return to Earth</span>
+                <span class="earth-hint">返回地球 · 个人主页</span>
+            </div>
+        </a>
+    </div>
+
     <!-- 主交互区域 -->
     <div class="container">
         <!-- 宇宙微弱漂浮层包装器 -->
@@ -703,19 +717,10 @@
                             <h2 class="scene-title">【第二幕：邂逅】</h2>
                             <p class="scene-desc">光年之外，星河横流。<br>终在此处与你重逢，这是一颗属于我们的星球。</p>
                         </div>
-                        <div class="card-footer" style="flex-direction: column; width: 100%;">
-                            <button class="btn btn-capture" id="btn-download" title="捕获这片星空" style="width: 100%; margin-bottom: 5px;">
+                        <div class="card-footer" style="width: 100%;">
+                            <button class="btn btn-capture" id="btn-download" title="捕获这片星空" style="width: 100%;">
                                 <span>捕获星空</span>
                             </button>
-                            <div class="earth-link-container">
-                                <a class="earth-link" href="index.html" title="返回主页">
-                                    <div class="earth-info">
-                                        <span class="earth-title">Return to Earth</span>
-                                        <span class="earth-hint">返回地球 · 个人主页</span>
-                                    </div>
-                                    <span class="earth-arrow">↗</span>
-                                </a>
-                            </div>
                         </div>
                     </div>
         
@@ -1059,8 +1064,9 @@
             const currentRot = showBack ? '180deg' : '0deg';
             cardContainer.style.setProperty('--container-rot', currentRot);
 
-            // 1. 容器淡出
+            // 1. 容器与左上角返回地球板块淡出
             cardContainer.classList.add('fade-out');
+            document.querySelector('.back-to-earth-container').classList.add('fade-out');
 
             // 2. 全屏组件激活
             fsBg.classList.add('active');
@@ -1078,8 +1084,9 @@
             fsControls.classList.remove('active');
             fsPanel.classList.remove('active');
 
-            // 2. 卡片恢复淡入
+            // 2. 卡片恢复淡入，左上角返回地球板块恢复显示
             cardContainer.classList.remove('fade-out');
+            document.querySelector('.back-to-earth-container').classList.remove('fade-out');
         });
 
         // 切换说明卡片的显示和隐藏
