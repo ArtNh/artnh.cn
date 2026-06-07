@@ -546,6 +546,49 @@
             margin-left: 10px;
         }
 
+
+        /* ── 左上角 Wander 链接 ── */
+        .wander-corner {
+            position: absolute;
+            top: 2.5rem;
+            left: clamp(2.5rem, 10vw, 7rem);
+            z-index: 10;
+        }
+
+        .wander-corner a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1px solid var(--line);
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(12, 13, 15, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .wander-corner a:hover {
+            color: var(--accent);
+            border-color: rgba(200, 184, 154, 0.3);
+            background: rgba(200, 184, 154, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .wander-dot {
+            width: 5px;
+            height: 5px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--accent);
+            animation: pulse 2s infinite ease-in-out;
+        }
+
         /* ── NASA 全屏探索模式 ── */
         .fullscreen-bg {
             position: fixed;
@@ -744,6 +787,14 @@
     <!-- Canvas 动态粒子背景（置于最底层） -->
     <canvas id="space-canvas"></canvas>
 
+    <!-- 左上角 Wander 入口小板块 -->
+    <div class="wander-corner a1">
+        <a href="#wander" id="btn-wander-gate" title="进入迷航与邂逅">
+            <span>Wander 宇宙邂逅</span>
+            <span class="wander-dot"></span>
+        </a>
+    </div>
+
     <h1 class="name a1">
         ARTNH
         <span class="name-sub">CUI &nbsp;JIN-LIN</span>
@@ -871,7 +922,8 @@
         let height = canvas.height = window.innerHeight;
 
         const stars = [];
-        const starCount = Math.min(80, Math.floor((width * height) / 20000)); 
+        // 增加星空粒子上限至 180，丰富星尘背景
+        const starCount = Math.min(180, Math.floor((width * height) / 8000)); 
 
         let mouseX = 0;
         let mouseY = 0;
@@ -890,13 +942,18 @@
             nebulae[0].y = height * 0.4;
             nebulae[1].x = width * 0.65;
             nebulae[1].y = height * 0.6;
+            nebulae[2].x = width * 0.5;
+            nebulae[2].y = height * 0.3;
         });
 
+        // 渐变星云由双色丰富为三色微光，加入微弱的粉紫调星云，丰富色彩层次
         const nebulae = [
             { x: width * 0.35, y: height * 0.4, r: 400, color: 'rgba(10, 22, 45, 0.18)', vx: 0.04, vy: -0.02 },
-            { x: width * 0.65, y: height * 0.6, r: 450, color: 'rgba(25, 20, 15, 0.13)', vx: -0.03, vy: 0.03 }
+            { x: width * 0.65, y: height * 0.6, r: 450, color: 'rgba(25, 20, 15, 0.13)', vx: -0.03, vy: 0.03 },
+            { x: width * 0.5, y: height * 0.3, r: 350, color: 'rgba(28, 15, 35, 0.08)', vx: 0.02, vy: 0.02 }
         ];
 
+        // 升级为多层星尘类，支持景深视差
         class Star {
             constructor() {
                 this.reset();
@@ -906,43 +963,47 @@
             reset() {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
-                this.size = Math.random() > 0.8 ? (Math.random() * 0.6 + 0.6) : (Math.random() * 0.4 + 0.15); 
-                this.speedX = (Math.random() - 0.5) * 0.015;
-                this.speedY = (Math.random() - 0.5) * 0.015; 
-                this.alpha = Math.random() * 0.35 + 0.15;
-                this.flickerSpeed = Math.random() * 0.008 + 0.002;
+                // depth 越小，星子越远、越暗、越小、越静止
+                this.depth = Math.random() * 0.8 + 0.2; 
+                
+                this.size = this.depth * (Math.random() * 0.7 + 0.2); 
+                this.speedX = (Math.random() - 0.5) * 0.015 * this.depth;
+                this.speedY = (Math.random() - 0.5) * 0.015 * this.depth; 
+                this.alpha = Math.random() * 0.3 + 0.1 * this.depth;
+                this.flickerSpeed = (Math.random() * 0.005 + 0.001) * this.depth;
                 this.flickerDir = Math.random() > 0.5 ? 1 : -1;
                 this.pullX = 0;
                 this.pullY = 0;
             }
 
             update() {
-                if (targetMouseX !== 0 || targetMouseY !== 0) {
+                // 仅中近景星子对鼠标引力有偏折反应
+                if (this.depth > 0.45 && (targetMouseX !== 0 || targetMouseY !== 0)) {
                     const mx = (targetMouseX * (width / 2)) + (width / 2);
                     const my = (targetMouseY * (height / 2)) + (height / 2);
                     const dx = mx - this.x;
                     const dy = my - this.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
                     
-                    if (dist < 350) {
-                        const force = (350 - dist) / 450000;
+                    if (dist < 300) {
+                        const force = ((300 - dist) / 450000) * (this.depth - 0.4);
                         this.pullX += dx * force;
                         this.pullY += dy * force;
                     }
                 }
 
-                this.pullX *= 0.96;
-                this.pullY *= 0.96;
+                this.pullX *= 0.95;
+                this.pullY *= 0.95;
 
                 this.y += this.speedY + this.pullY;
                 this.x += this.speedX + this.pullX;
 
                 this.alpha += this.flickerSpeed * this.flickerDir;
-                if (this.alpha >= 0.6) {
-                    this.alpha = 0.6;
+                if (this.alpha >= 0.7 * this.depth) {
+                    this.alpha = 0.7 * this.depth;
                     this.flickerDir = -1;
-                } else if (this.alpha <= 0.1) {
-                    this.alpha = 0.1;
+                } else if (this.alpha <= 0.05) {
+                    this.alpha = 0.05;
                     this.flickerDir = 1;
                 }
 
@@ -959,8 +1020,9 @@
             }
 
             draw() {
-                const offsetX = mouseX * this.size * 4;
-                const offsetY = mouseY * this.size * 4;
+                // 视差偏移随深度增加而减小
+                const offsetX = mouseX * this.size * 2 * this.depth;
+                const offsetY = mouseY * this.size * 2 * this.depth;
 
                 ctx.fillStyle = `rgba(240, 237, 232, ${this.alpha})`;
                 ctx.beginPath();
@@ -969,9 +1031,65 @@
             }
         }
 
+        // 新增流星特写系统，极细、高雅的沙金色微光划落
+        class Meteor {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.active = false;
+                this.x = 0;
+                this.y = 0;
+                this.speedX = 0;
+                this.speedY = 0;
+                this.length = 0;
+                this.alpha = 0;
+                this.thickness = 0;
+            }
+
+            trigger() {
+                this.active = true;
+                this.x = Math.random() * width * 0.6;
+                this.y = Math.random() * height * 0.3;
+                const angle = (Math.random() * 15 + 35) * Math.PI / 180; // 35到50度倾斜角
+                const speed = Math.random() * 8 + 6;
+                this.speedX = speed * Math.cos(angle);
+                this.speedY = speed * Math.sin(angle);
+                this.length = Math.random() * 80 + 40;
+                this.alpha = Math.random() * 0.5 + 0.3;
+                this.thickness = Math.random() * 0.6 + 0.4;
+            }
+
+            update() {
+                if (!this.active) return;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.alpha -= 0.012; // 逐渐变淡消逝
+                if (this.alpha <= 0 || this.y > height || this.x > width) {
+                    this.active = false;
+                }
+            }
+
+            draw() {
+                if (!this.active) return;
+                ctx.save();
+                ctx.strokeStyle = `rgba(200, 184, 154, ${this.alpha})`;
+                ctx.lineWidth = this.thickness;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x - this.speedX * 3, this.y - this.speedY * 3);
+                ctx.stroke();
+                ctx.restore();
+            }
+        }
+
         for (let i = 0; i < starCount; i++) {
             stars.push(new Star());
         }
+
+        const meteor = new Meteor();
+        let framesSinceLastMeteor = 0;
 
         function animate() {
             mouseX += (targetMouseX - mouseX) * 0.05;
@@ -1003,6 +1121,15 @@
                 star.update();
                 star.draw();
             });
+
+            // 定时以极小概率渲染划过夜空的流星，每 8~15 秒一次
+            framesSinceLastMeteor++;
+            if (!meteor.active && framesSinceLastMeteor > 300 && Math.random() < 0.005) {
+                meteor.trigger();
+                framesSinceLastMeteor = 0;
+            }
+            meteor.update();
+            meteor.draw();
 
             requestAnimationFrame(animate);
         }
@@ -1218,6 +1345,7 @@
         // ── 门扉遮罩与状态托管 ──
         const errorOverlay = document.getElementById('error-overlay');
         const btnBackToEarth = document.getElementById('btn-back-to-earth');
+        const btnWanderGate = document.getElementById('btn-wander-gate');
 
         function initOverlay() {
             const hash = window.location.hash;
@@ -1231,6 +1359,14 @@
         }
 
         window.addEventListener('load', initOverlay);
+
+        // 点击左上角小板块 Wander 链接时，重新拉起 404 星空欢迎门
+        btnWanderGate.addEventListener('click', (e) => {
+            e.preventDefault();
+            errorOverlay.classList.remove('hidden');
+            void errorOverlay.offsetWidth;
+            errorOverlay.classList.add('active');
+        });
 
         btnBackToEarth.addEventListener('click', (e) => {
             e.preventDefault();
