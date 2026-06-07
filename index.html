@@ -779,6 +779,23 @@
                 padding: 6px 12px;
                 font-size: 0.65rem;
             }
+
+            /* ── 优化移动端 Wander 按钮及主体排布，避免重叠 ── */
+            body {
+                padding-top: 5.5rem;
+                justify-content: flex-start;
+            }
+
+            .wander-corner {
+                top: 1.5rem;
+                left: 1.5rem;
+            }
+
+            .wander-corner a {
+                padding: 6px 12px;
+                font-size: 0.6rem;
+                letter-spacing: 0.1em;
+            }
         }
     </style>
 </head>
@@ -1347,6 +1364,18 @@
         const btnBackToEarth = document.getElementById('btn-back-to-earth');
         const btnWanderGate = document.getElementById('btn-wander-gate');
 
+        // 复位卡片到初始正面状态
+        function resetCard() {
+            isFlipped = false;
+            isHovered = false; // 显式重置 hover 状态，防止 display: none 导致 mouseleave 未触发而状态锁死
+            cardContainer.classList.remove('is-flipped');
+            card.style.transition = 'transform 0.8s cubic-bezier(0.15, 0.85, 0.35, 1)';
+            card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            card.querySelectorAll('.shine-overlay').forEach(shine => {
+                shine.style.opacity = '0';
+            });
+        }
+
         function initOverlay() {
             const hash = window.location.hash;
             if (hash === '#home') {
@@ -1355,6 +1384,7 @@
             } else {
                 errorOverlay.classList.remove('hidden');
                 errorOverlay.classList.add('active');
+                resetCard();
             }
         }
 
@@ -1363,6 +1393,7 @@
         // 点击左上角小板块 Wander 链接时，重新拉起 404 星空欢迎门
         btnWanderGate.addEventListener('click', (e) => {
             e.preventDefault();
+            resetCard(); // 唤起前强制重置为正面
             errorOverlay.classList.remove('hidden');
             void errorOverlay.offsetWidth;
             errorOverlay.classList.add('active');
@@ -1370,11 +1401,13 @@
 
         btnBackToEarth.addEventListener('click', (e) => {
             e.preventDefault();
+            resetCard(); // 立即重置卡片状态，防止在淡出动画过程中因 mousemove 再次触发 3D 旋转
             // 淡出遮罩层
             errorOverlay.classList.remove('active');
             setTimeout(() => {
                 if (!errorOverlay.classList.contains('active')) {
                     errorOverlay.classList.add('hidden');
+                    resetCard(); // 彻底隐藏后再次确保重置
                 }
             }, 600);
 
