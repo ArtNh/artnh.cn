@@ -365,6 +365,19 @@
             position: relative;
         }
 
+        .glitch-sub {
+            display: block;
+            font-family: 'Syncopate', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.38em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-top: 10px;
+            -webkit-text-fill-color: var(--muted);
+            background: none;
+        }
+
         .scene-title {
             font-size: 1.1rem;
             font-weight: 400;
@@ -882,7 +895,10 @@
                                 <div class="system-time">ERR_404</div>
                             </div>
                             <div class="card-body">
-                                <div class="glitch-title">404</div>
+                                <div class="glitch-title">
+                                    404
+                                    <span class="glitch-sub">not found</span>
+                                </div>
                                 <h2 class="scene-title">【第一幕：迷航】</h2>
                                 <p class="scene-desc">我们在群星的脉冲中丢失了彼此的信号。<br>这里是无尽的冷寂，唯有光线在引力下微微偏折。</p>
                             </div>
@@ -1246,7 +1262,7 @@
             
             let tiltX = 0;
             let tiltY = 0;
-            const showBack = isHovered || isFlipped;
+            const showBack = isFlipped;
             
             if (isHovered && e) {
                 const localX = e.clientX - rect.left;
