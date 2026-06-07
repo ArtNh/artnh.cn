@@ -17,7 +17,7 @@
         }
 
         :root {
-            --bg:     #060606;
+            --bg:     #0c0d0f; /* 调整为冷调高级暗灰色，减轻整体深色黑暗的压抑感 */
             --fg:     #f0ede8;
             --muted:  #9b9a95; /* 提升灰色文字对比度，保证清晰度与易读性 */
             --accent: #c8b89a;
@@ -176,7 +176,7 @@
             width: 100vw;
             height: 100vh;
             z-index: 999;
-            background: rgba(6, 6, 6, 0.55);
+            background: rgba(12, 13, 15, 0.45); /* 微调为更具透光感的暗灰，减轻压抑感 */
             backdrop-filter: blur(0px);
             -webkit-backdrop-filter: blur(0px);
             opacity: 0;
@@ -475,19 +475,19 @@
 
         @keyframes spaceFloat {
             0% {
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+                transform: translateY(0px) translateX(0px) rotate(0deg);
             }
             25% {
-                transform: translateY(-20px) translateX(12px) rotate(1.4deg) scale(0.975);
+                transform: translateY(-4px) translateX(2px) rotate(0.15deg);
             }
             50% {
-                transform: translateY(16px) translateX(-10px) rotate(-1.2deg) scale(1.025);
+                transform: translateY(3px) translateX(-2px) rotate(-0.1deg);
             }
             75% {
-                transform: translateY(-8px) translateX(8px) rotate(0.8deg) scale(0.985);
+                transform: translateY(-2px) translateX(1px) rotate(0.05deg);
             }
             100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+                transform: translateY(0px) translateX(0px) rotate(0deg);
             }
         }
 
@@ -773,20 +773,12 @@
             <span class="arrow">↗</span>
         </a>
 
-        <!-- 修正 href 指向 hash 路由 #wander，触发单页拦截 -->
-        <a class="link-item" href="#wander" title="进入迷航与邂逅">
-            <div class="link-info">
-                <span class="link-title">Wander</span>
-                <span class="link-hint">404.html &nbsp;·&nbsp; 宇宙深空邂逅</span>
-            </div>
-            <span class="arrow">↗</span>
-        </a>
     </nav>
 
     <footer>© 2025 &nbsp;CUI JIN-LIN &nbsp;·&nbsp; ARTNH.CN</footer>
 
     <!-- 404 全屏冷调磨砂模糊覆盖层 -->
-    <div id="error-overlay" class="hidden">
+    <div id="error-overlay" class="active">
         <!-- NASA 全屏星空探索模式容器 -->
         <div class="fullscreen-bg" id="fs-bg"></div>
 
@@ -985,7 +977,7 @@
             mouseX += (targetMouseX - mouseX) * 0.05;
             mouseY += (targetMouseY - mouseY) * 0.05;
 
-            ctx.fillStyle = '#060606';
+            ctx.fillStyle = '#0c0d0f'; // 与 --bg 变量一致的高级暗灰
             ctx.fillRect(0, 0, width, height);
 
             nebulae.forEach(n => {
@@ -1223,33 +1215,37 @@
         });
 
 
-        // ── 路由/状态拦截与托管 ──
+        // ── 门扉遮罩与状态托管 ──
         const errorOverlay = document.getElementById('error-overlay');
         const btnBackToEarth = document.getElementById('btn-back-to-earth');
 
-        function checkRoute() {
+        function initOverlay() {
             const hash = window.location.hash;
-            if (hash === '#wander' || hash === '#404') {
-                errorOverlay.classList.remove('hidden');
-                void errorOverlay.offsetWidth;
-                errorOverlay.classList.add('active');
-            } else {
+            if (hash === '#home') {
                 errorOverlay.classList.remove('active');
-                setTimeout(() => {
-                    if (!errorOverlay.classList.contains('active')) {
-                        errorOverlay.classList.add('hidden');
-                    }
-                }, 600);
+                errorOverlay.classList.add('hidden');
+            } else {
+                errorOverlay.classList.remove('hidden');
+                errorOverlay.classList.add('active');
             }
         }
 
-        window.addEventListener('hashchange', checkRoute);
-        window.addEventListener('load', checkRoute);
+        window.addEventListener('load', initOverlay);
 
         btnBackToEarth.addEventListener('click', (e) => {
             e.preventDefault();
-            // 清除 hash 返回主站首页
-            window.location.hash = '';
+            // 淡出遮罩层
+            errorOverlay.classList.remove('active');
+            setTimeout(() => {
+                if (!errorOverlay.classList.contains('active')) {
+                    errorOverlay.classList.add('hidden');
+                }
+            }, 600);
+
+            // 如果有 hash，平滑清理 hash
+            if (window.location.hash) {
+                history.replaceState(null, null, ' ');
+            }
         });
     </script>
 </body>
