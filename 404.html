@@ -365,22 +365,25 @@
             width: 100%;
             height: 100%;
             pointer-events: none; /* 防止包裹层拦截页面其他鼠标事件 */
-            animation: spaceFloat 16s ease-in-out infinite alternate;
+            animation: spaceFloat 18s ease-in-out infinite;
         }
 
-        /* 强化宇宙空间失重浮沉：增大位移动画范围，并加入 3D 深度的缩放 (scale) 波动，使漂浮感更明显而顺畅 */
+        /* 强力强调宇宙空间失重浮沉：扩大平移范围，并加入更显著的 3D 深度缩放 (scale) 与旋转浮沉变化 */
         @keyframes spaceFloat {
             0% {
                 transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
             }
-            33% {
-                transform: translateY(-12px) translateX(5px) rotate(0.4deg) scale(0.994);
+            25% {
+                transform: translateY(-20px) translateX(12px) rotate(1.4deg) scale(0.975);
             }
-            66% {
-                transform: translateY(8px) translateX(-5px) rotate(-0.3deg) scale(1.004);
+            50% {
+                transform: translateY(16px) translateX(-10px) rotate(-1.2deg) scale(1.025);
+            }
+            75% {
+                transform: translateY(-8px) translateX(8px) rotate(0.8deg) scale(0.985);
             }
             100% {
-                transform: translateY(-3px) translateX(2px) rotate(0.1deg) scale(0.997);
+                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
             }
         }
 
@@ -1095,8 +1098,16 @@
         // ── See Full Image 强制下载原图 ──
         const btnFsDownload = document.getElementById('btn-fs-download');
         btnFsDownload.addEventListener('click', (e) => {
-            e.preventDefault();
             const url = btnFsDownload.getAttribute('href');
+            
+            // 如果是本地 file:// 协议，不要执行 fetch（因为会受 CORS 策略拦截导致 Failed to fetch 报错）
+            // 直接由浏览器以默认的原生 a[download] 执行下载或在新标签页打开，这样绝不报错且极速响应
+            if (window.location.protocol === 'file:') {
+                console.log("检测到本地运行环境，使用原生浏览器下载/预览逻辑");
+                return;
+            }
+
+            e.preventDefault();
             
             // 改变按钮文字提示正在下载
             const originalText = btnFsDownload.textContent;
