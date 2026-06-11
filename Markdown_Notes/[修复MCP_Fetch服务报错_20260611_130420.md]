@@ -1,0 +1,41 @@
+# 修复 MCP Fetch 服务 404 报错记录
+
+---
+
+### [2026-06-11 13:04:20] 修复 MCP 配置文件中非活跃或非官方发布的 `server-fetch` npm 包名
+
+---
+
+> **核心结论**：
+> 官方 MCP Fetch 服务器实为 Python 实现，无法直接通过 `npx` 在 Node.js 体系下运行。已将配置文件中的服务包名替换为社区广泛维护且功能完全一致的 TypeScript 版本 `mcp-server-fetch-typescript`。
+
+---
+
+## 诊断信息与排查历程
+
+### 1. 报错现象
+在 IDE 的 Agent 面板中出现黄色警告，指示 `fetch` 服务初始化失败：
+- 错误代码：`E404`
+- 报错请求：`GET https://registry.npmjs.org/@modelcontextprotocol%2fserver-fetch`
+- 提示：`@modelcontextprotocol/server-fetch@*` 无法在 npm 官方镜像源上被找到。
+
+### 2. 原因分析
+- 经过 npm 注册表检索，官方组织 `@modelcontextprotocol` 下未发布名为 `server-fetch` 的 npm 包。
+- 官方 `modelcontextprotocol/servers` 仓库中的 `fetch` 模块采用 Python 开发，通常通过 `uvx` 运行。
+- 在当前没有安装 `uv` 等 Python 虚拟环境管理工具的情况下，继续通过 `npx` 运行会导致拉取失败。
+
+---
+
+## 解决方案与执行步骤
+
+### 1. 修改配置文件
+配置文件路径：
+[mcp_config.json](file:///C:/Users/AAA/.gemini/config/mcp_config.json)
+
+将原配置中的 `fetch` 服务包名进行替换：
+- **修改前**：`@modelcontextprotocol/server-fetch`
+- **修改后**：`mcp-server-fetch-typescript`
+
+### 2. 验证与重载
+- 配置文件更新后，IDE 会自动重新加载 MCP 服务的定义。
+- 社区版的 TypeScript `fetch` 服务提供了相同的 web 内容获取以及 Markdown/HTML 转换接口（如 `get_markdown`, `get_rendered_html` 等），能无缝解决环境缺失问题。
