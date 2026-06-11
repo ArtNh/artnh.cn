@@ -39,3 +39,32 @@
 ### 2. 验证与重载
 - 配置文件更新后，IDE 会自动重新加载 MCP 服务的定义。
 - 社区版的 TypeScript `fetch` 服务提供了相同的 web 内容获取以及 Markdown/HTML 转换接口（如 `get_markdown`, `get_rendered_html` 等），能无缝解决环境缺失问题。
+
+---
+
+### [2026-06-11 13:09:40] 解决在切换工作区至新文件夹（`D:/AI_Agent_Study`）后 MCP 服务初始化全部报错的问题
+
+---
+
+> **核心结论**：
+> 全局配置文件 `mcp_config.json` 确实是在任何工作区都会被加载。但其中的 `filesystem`（文件系统 MCP 服务）带有严格的安全沙箱机制，只有在 `args` 中显式列出的路径才被授权访问。
+> 当切换到新文件夹 `D:/AI_Agent_Study` 时，由于该目录未在授权列表中，导致文件系统 MCP 访问越界报错，引起全局 MCP 初始化链条故障。已通过将该路径加入配置文件的授权参数中予以解决。
+
+---
+
+## 诊断信息与排查历程
+
+### 1. 现象表现
+切换工作区至 `D:/AI_Agent_Study` 目录打开 IDE 时，Agent 面板右下角仍会弹出黄色 MCP 报错。
+
+### 2. 根因剖析
+- 经过日志排查，系统在 `mcp_manager` 载入过程中报错 `failed to get server directory`。
+- 检查 `C:/Users/AAA/.gemini/config/mcp_config.json` 的配置，`filesystem` 的 args 仅被授权了原工作区路径 `D:/ZZZ/Documents/Antigravity IDE`。
+- 因为 `AI_Agent_Study` 属于该允许列表之外的路径，当 Agent 探查该空目录时，沙箱规则抛出异常。
+
+---
+
+## 解决步骤与优化
+
+1. 规范化修改了 [mcp_config.json](file:///C:/Users/AAA/.gemini/config/mcp_config.json)，将路径列表扩充，增加 `D:/AI_Agent_Study` 的读取权限。
+2. 规范化了斜杠格式，避免在 Windows 下产生过多的转义干扰。
