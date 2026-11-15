@@ -26,8 +26,9 @@ window.BLOG_META = {
         { id: 'inspiration', label: '素材',   en: 'INSPIRATION', color: '#2FD6A6' },
         { id: 'lab',         label: '实验室', en: 'LAB',         color: '#FF9F1C' }
     ],
-    /* 首页只露这几篇（做减法）；展开「全部档案」后才显示 10 篇 */
-    picked: ['hollow-knight-rig', 'npr-outline', 'stylized-space-study-01', 'env-design-to-game-art'],
+    /* 首页只露这几篇（做减法）；展开「全部档案」后才显示全部 */
+    /* 站点搭建案例置入精选首位，与旧 works 精选同为粉色，故替换一篇保持四色撞开 */
+    picked: ['site-build-case-study', 'hollow-knight-rig', 'npr-outline', 'env-design-to-game-art'],
     links: [
         { label: 'Portfolio',   hint: 'www.artnh.cn · 作品集',     url: 'https://www.artnh.cn' },
         { label: 'Art Gallery', hint: 'art.artnh.cn · 作品档案馆', url: 'https://art.artnh.cn/' },
@@ -36,6 +37,133 @@ window.BLOG_META = {
 };
 
 window.BLOG_POSTS = [
+
+    {
+        slug: 'site-build-case-study',
+        title: 'ARTNH.CN 搭建全案：从 404 门扉到手绘主网',
+        subtitle: '一次完整的个人站点重构 · 案例研究 / 六轮迭代 / 技术决策 / 排坑 / 交付',
+        date: '2026-11-16',
+        category: 'works',
+        tags: ['站点搭建', '设计复盘', '零构建'],
+        readTime: 18,
+        featured: true,
+        excerpt: '从一个只有三行外链、首屏强制 404 的门扉页，到零构建的亮色手绘撞色博客主网。把案例研究、六轮迭代、技术决策、15 个坑的根因和全部验收数据摊开写清楚。',
+        content: `
+<p>这个站点最初不是博客。它是一块单文件雕出来的琥珀：1445 行里塞着内联 CSS、HTML 和 JS，打开首页先撞上一张全屏的 404 翻转卡片，翻过去才看得见三行外链。这篇把「怎么把它重铸成现在这样」完整摊开 —— 包括走错的方向、被否掉的字体，和 15 个坑的真正根因。</p>
+
+<h2>01 · 起点与约束</h2>
+<p>改造前没有构建工具、没有框架、没有依赖、没有测试。主站本体只有标题、一段简介和三条外链；真正的主角是盖在最上层的「宇宙门扉」：3D 翻转卡片、NASA 全屏探索、180 粒子 Canvas 星尘、沙金流星与鼠标引力偏折。</p>
+<table>
+<thead><tr><th>文件</th><th>体量</th><th>角色</th></tr></thead>
+<tbody>
+<tr><td>index.html</td><td>1445 行 / 49 KB</td><td>内联 CSS + HTML + JS 全在这里</td></tr>
+<tr><td>404.html</td><td>15 行</td><td>死链重定向到 index.html#404</td></tr>
+<tr><td>1000104636.jpg</td><td>357 KB</td><td>NASA 生日星空图</td></tr>
+<tr><td>favicon.svg</td><td>21 行</td><td>第一版深空蓝渐变 A</td></tr>
+</tbody>
+</table>
+<p>动手前先把旧机器的失效路径全部修对（工作区变量、文档相对路径、缺失素材改成项目内可恢复路径）。然后立住三条约束：</p>
+<ul>
+<li><strong>双击即开</strong>：文章数据用 <code>posts.js</code> 挂全局变量，不用 <code>fetch</code> 读 JSON —— <code>file://</code> 下会被 CORS 拦下。</li>
+<li><strong>零构建</strong>：不引框架、不装 npm，页面渲染、筛选、路由全部手写。</li>
+<li><strong>留退路</strong>：新主题后置覆盖、旧暗色样式一行不删，移除一行 link 就能回退。</li>
+</ul>
+
+<h2>02 · 先研究，再动刀</h2>
+<p>第一版我做成暗调信息墙，被一句话否掉：「要亮色调……全是直角矩形缺少动画感……把所有东西全部拿出来缺少创意」。这次没直接换配色，先去拆解真实成功的个人站点。</p>
+<table>
+<thead><tr><th>案例</th><th>值得偷的东西</th><th>落点</th></tr></thead>
+<tbody>
+<tr><td>Jack McDade</td><td>三色系统、波浪取代直线、拒绝方框与对称</td><td>受限色板 + 满幅波纹</td></tr>
+<tr><td>Karl Gonsalves</td><td>平涂撞色、no UI density，插画即界面</td><td>奶油纸底 + 首屏单一焦点</td></tr>
+<tr><td>StealThis.dev</td><td>硬偏移阴影、贴纸倾斜、果冻点击配方</td><td>7px 8px 0 阴影 + 26px 圆角</td></tr>
+<tr><td>Antoniouve</td><td>满底亮黄 + 巨标题 + 弹性 easing</td><td>响应式巨标题</td></tr>
+<tr><td>Jonas Mosesson</td><td>每个项目一个撞色背景</td><td>6 栏目各一色</td></tr>
+<tr><td>Oono Taro</td><td>静态色带平衡动画，motion 才突出</td><td>漂浮涂鸦只留 4 个</td></tr>
+</tbody>
+</table>
+<blockquote>好的那些共同点：一个视觉概念 + 一套受限色板 + 大量留白 + 少量但用得狠的动效。上一版错在把「风格化」理解成「暗调 + 铺满 + 直角网格」。</blockquote>
+
+<h2>03 · 六轮迭代</h2>
+<table>
+<thead><tr><th>轮</th><th>反馈</th><th>动作</th></tr></thead>
+<tbody>
+<tr><td>R1</td><td>改成博客主网</td><td>先定方向：门扉降级彩蛋 / 零构建 / 风格化；新增数据层与三态路由</td></tr>
+<tr><td>R2</td><td>要亮色撞色、有留白</td><td>案例研究后写独立 theme.css；首屏砍到 4 篇精选</td></tr>
+<tr><td>R3</td><td>插画该动、回到顶部无效、彩蛋卡顿</td><td>停 Canvas / blur / 3D 倾斜；门扉换亮色皮；点击迸发</td></tr>
+<tr><td>R4</td><td>没动效、要手绘、封面各不同</td><td>动画周期从 15s 砍到 2.6s；满幅波纹、6 套封面、贝塞尔样条线</td></tr>
+<tr><td>R5</td><td>手绘只作用于图形</td><td>撤回全部手写字体，图形层一处没动</td></tr>
+<tr><td>R6</td><td>标签图标不搭</td><td>重画亮黄手绘贴纸标</td></tr>
+</tbody>
+</table>
+<p>R5 最关键。我把「手绘」一起刷到了文字层，用户一句「no」把整轮方向拉回来；之后写进项目约定与贡献指南：<em>风格化只碰图形与容器，不改文字字体</em>。</p>
+
+<h2>04 · 设计系统</h2>
+<ul>
+<li><strong>色板</strong>：奶油纸底 60% + 电光蓝 30% + 粉 / 黄 / 薄荷 10%；作品粉、笔记蓝、教程紫、素材薄荷、实验室橙。</li>
+<li><strong>字体</strong>：全站 Baloo 2 + 系统中文字体，小字号手写体会糊，已全部撤回。</li>
+<li><strong>形状</strong>：四角各异的不规则圆角、粗细不均的双笔触描边、7px 8px 0 硬阴影、按索引 ±1.6° 的贴纸倾斜。</li>
+<li><strong>动效</strong>：星球六组动画、四涂鸦四条独立轨迹、满幅四层波纹、滚动入场、鼠标视差、点击星点与样条线。</li>
+</ul>
+<p>性能上有个克制：手绘抖动滤镜只给静态封面、小涂鸦和短命的点击线，不给动画元素 —— 否则每帧重算 feTurbulence，刚修好的卡顿会立刻回来。</p>
+
+<h2>05 · 技术实现</h2>
+<p><strong>零构建数据层</strong>：<code>posts.js</code> 暴露 BLOG_META 与 BLOG_POSTS，渲染引擎负责网格、筛选、全文搜索、排序、编号、阅读层与上下篇。加文章只需复制一个对象。</p>
+<p><strong>三态路由</strong>：hash 托管首页 / 分类 / 文章详情 / 关于 / 404 彩蛋；Wander 唤起门扉不改 hash，从文章页点开彩蛋关掉后仍停在那篇文章。</p>
+<p><strong>主题后置覆盖</strong>：<code>theme.css</code> 在 head 末尾引入覆盖内联暗色样式，旧暗色稿一行没删，成为可回退底稿。</p>
+<p><strong>性能开关</strong>：亮色主题下不启动 180 粒子循环、不做全屏 blur(25px)、不做逐帧 3D 倾斜；移除 link 回退暗色时三者自动恢复。</p>
+<p><strong>手绘封面</strong>：6 套基础 SVG 图案 × 按 slug 派生的镜像、旋转、星点位置 —— 展开后 11 张全唯一，新增文章不用单独画图。</p>
+
+<h2>06 · 15 个坑（根因级）</h2>
+<p>这部分最值钱，因为几乎每一条都不是「看上去那样」。</p>
+<table>
+<thead><tr><th>现象</th><th>根因</th><th>修法</th></tr></thead>
+<tbody>
+<tr><td>标题句点掉到下一行</td><td>span 的 display:block 连带作用</td><td>句点单独 inline</td></tr>
+<tr><td>网格第一行右侧空洞</td><td>大卡跨列撞车</td><td>改 2 列并取消跨列</td></tr>
+<tr><td>移动端像被裁切</td><td>无头浏览器把 390 拉成 504，是尺子不准</td><td>CDP 真实视口仿真</td></tr>
+<tr><td>blob 退化成直角矩形</td><td>reduced-motion 下没给静态圆角</td><td>补基础圆角</td></tr>
+<tr><td>第 4 张卡隐身</td><td>入场 opacity:0 没推进</td><td>基础态设 opacity:1</td></tr>
+<tr><td>彩蛋糊成灰白</td><td>半透明底被亮色主站透穿</td><td>改 92% 实底</td></tr>
+<tr><td>彩蛋卡顿</td><td>blur + 180 粒子 + mousemove 3D 空转</td><td>三处全停</td></tr>
+<tr><td>回到顶部无效</td><td>a 标签只改 hash 还会收起文章</td><td>button + scrollTo</td></tr>
+<tr><td>「插画没动效」</td><td>6 个动画全在跑，只是 15s 一圈</td><td>调节奏不是修 bug</td></tr>
+<tr><td>文字发糊 / 被否</td><td>手绘误伤文字层</td><td>全量撤回字体</td></tr>
+<tr><td>favicon 全破图</td><td>python 服务返回非标准 image/svg</td><td>注册正确 MIME</td></tr>
+<tr><td>窄屏真溢出 55px</td><td>品牌副标题撑破 header</td><td>窄屏收掉副标题</td></tr>
+<tr><td>git TLS 握手断</td><td>代理对 HTTP/2 CONNECT 返回 502</td><td>HTTP/1.1 + OpenSSL</td></tr>
+<tr><td>push 大 POST 被掐</td><td>GET 能过、上传过不去</td><td>改走 Git Data API</td></tr>
+<tr><td>本地远程分叉</td><td>API 通道是另一条提交链</td><td>fetch + reset --soft 对齐</td></tr>
+</tbody>
+</table>
+
+<h2>07 · 工程化与交付</h2>
+<p>远程覆盖前先用 API 把旧版 9 个文件完整备份到项目外并记下回滚锚点。推送脚本做三件安全约束：token 只走环境变量不落盘、推送前 lease 校验远程 HEAD 未变、新 commit 以旧 HEAD 为 parent 做 fast-forward。之后补齐 README、推送与回滚手册、详细变更档案、四个社区规范文件，并把仓库描述补上。</p>
+<p>许可上有个取舍：LICENSE 保持纯 MIT 让 GitHub 正确识别；文章文字、手绘插画、封面与图片素材的版权例外声明放在 README 和贡献指南里，不写进 LICENSE 以免识别降级。</p>
+
+<h2>08 · 验收数据</h2>
+<pre>语法    posts.js / 内联 JS 零错误，CSS 花括号平衡
+数据    11 篇 / 6 栏目 / 4 篇精选 / 无重复 slug
+渲染    首页 / 详情 / #404 彩蛋 / 展开全部 四态通过
+响应式  1440 与真实 390px：scrollW === inner，零溢出
+封面    展开后 11 张全唯一
+动效    10 组 animation running，周期 2.6s / 3.4s
+波纹    waveW === innerWidth（1440 / 1000 / 390）
+点击    scribbles=1 paths=3 sparks=6 rings=1
+性能    Canvas 循环已停 / overlayBlur=none
+双击    file:// 完整渲染
+远程    逐字节一致，community profile 四件套就位</pre>
+<p>验收方式本身也是经验：用 CDP 读 computed style、getAnimations、DOM 计数与 scrollWidth 做「行为级」验证，而不是只靠截图目测 —— 上面第 3、4、5、9 条都是这么抓到的。</p>
+
+<h2>09 · 三条可复用经验</h2>
+<ul>
+<li><strong>先研究再动刀</strong>。说「风格不对」时最贵的动作是立刻换配色；先把成功案例拆成可执行规则，一轮就能命中。</li>
+<li><strong>诊断要量，不要猜</strong>。「没动效」其实全在跑，「移动端裁切」其实是尺子不准，「卡顿」其实是暗色遗留空转。</li>
+<li><strong>给改造留退路</strong>。后置覆盖不删旧码、彩蛋降级而非移除、性能开关可自动恢复、覆盖前备份 + lease —— 每一步能一键回退，才敢在老站上做大改。</li>
+</ul>
+<blockquote>协作上还有一条：风格化要划清作用层。用户一句「手绘只应用于图形」纠正了整轮方向，之后写进项目约定，避免下次再犯。</blockquote>
+<p>完整归档（含文件级变更清单、推送链、命名规则与已知边界）在仓库 <code>Markdown_Notes/[个人站点搭建完整案例_20261116_020652.md]</code>。</p>`
+    },
 
     {
         slug: 'hollow-knight-rig',

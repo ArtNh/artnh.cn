@@ -556,6 +556,37 @@ html, body {
 .reader-content code { color: var(--ink); background: var(--pink); border-radius: 6px; font-weight: 700; padding: .1rem .4rem; }
 .reader-content pre { background: var(--ink); border: var(--line); border-radius: 18px; color: var(--yellow); }
 .reader-content pre code { background: none; color: inherit; }
+/* 案例长文用的对照表：黄表头 + 手绘描边 + 虚线分隔 */
+.reader-content table {
+    width: 100%; border-collapse: separate; border-spacing: 0;
+    margin: 1.6rem 0 2.2rem; font-size: .9rem; font-weight: 600;
+    background: var(--paper-2); border: 2px solid var(--ink);
+    border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm);
+}
+.reader-content th {
+    background: var(--yellow); color: var(--ink); font-family: var(--pop);
+    font-size: .76rem; font-weight: 800; text-align: left;
+    padding: .8rem 1rem; border-bottom: 2px solid var(--ink);
+    border-right: 1px solid rgba(27,24,48,.18);
+}
+.reader-content td {
+    padding: .72rem 1rem; vertical-align: top;
+    border-bottom: 1px dashed rgba(27,24,48,.22);
+    border-right: 1px solid rgba(27,24,48,.1);
+}
+.reader-content tr:last-child td { border-bottom: none; }
+.reader-content th:last-child, .reader-content td:last-child { border-right: none; }
+.reader-content tbody tr:nth-child(even) td { background: rgba(255,216,77,.09); }
+@media (max-width: 560px) {
+    .reader-content table { font-size: .78rem; }
+    .reader-content th, .reader-content td { padding: .5rem .55rem; }
+    /* 长文阅读层：窄屏收紧顶部三控件，避免按钮文字折行 */
+    .reader-bar { gap: .5rem; padding: .7rem .9rem; }
+    .reader-back, .reader-gate {
+        font-size: .68rem; padding: .42rem .7rem; white-space: nowrap;
+    }
+    .reader-crumb { font-size: .56rem; letter-spacing: .04em; white-space: nowrap; }
+}
 .rnav {
     background: var(--paper-2); border: var(--line); border-radius: 18px;
     box-shadow: var(--shadow-sm); color: var(--ink);

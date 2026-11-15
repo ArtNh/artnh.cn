@@ -52,7 +52,7 @@
 | `favicon.svg` | 亮黄手绘贴纸标：亮黄底 + 电光蓝 A + 粉星 + 薄荷点 |
 | `404.html` | 服务器死链重定向到 `index.html#404` |
 | `1000104636.jpg` | 门扉彩蛋「带张星空走」的原图 |
-| `Markdown_Notes/` | 历次设计与排查归档 |
+| `Markdown_Notes/` | 历次设计与排查归档（含站点搭建完整案例） |
 | `README.md` | 本文件 · 项目介绍 |
 | `PUSH_GUIDE.md` | 完整推送 / 覆盖 / 回滚说明与变更台账 |
 | `CODE_OF_CONDUCT.md` | 社区行为准则 |
