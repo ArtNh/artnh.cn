@@ -74,6 +74,8 @@ python -m http.server 8000
 - [ ] 控制台无报错、无破图
 - [ ] `prefers-reduced-motion: reduce` 下内容仍完整可读（动画可以停，元素不能隐身）
 - [ ] 所有文字仍是清晰字体，没有被手绘风格误伤
+- [ ] 改动 `posts.js` / `theme.css` 后，已同步更新 `index.html` 里 `?v=` 版本号
+      （线上静态资源缓存 4 小时，不 bump 会导致访客看到旧内容）
 
 > 量移动端别只靠无头浏览器的 `--window-size=390,844`：它有最小窗口限制，会把视口偷偷拉到 504px。
 > 用 CDP `Emulation.setDeviceMetricsOverride` 才是真实 390 CSS px。

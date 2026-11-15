@@ -86,6 +86,10 @@ python -m http.server 8000
 
 `BLOG_META.picked` 决定首页默认露出的 6 篇（2 列网格正好 3 行），建议尽量挑不同分类让撞色更明显。
 
+> **改动后必须 bump 版本号**：线上静态资源默认缓存 4 小时。改完 `posts.js` 或 `theme.css`，
+> 记得把 `index.html` 里 `posts.js?v=...` / `theme.css?v=...` 的 `v` 改成新值，
+> 否则访客浏览器会继续用缓存的旧文件，看起来像「改了没生效」。
+
 ## 🧭 路由与彩蛋
 
 | Hash | 页面 |
