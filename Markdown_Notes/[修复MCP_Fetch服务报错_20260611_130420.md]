@@ -2,6 +2,12 @@
 
 ---
 
+> 📌 **归档说明（2026-11-15）**：本文为旧环境（`C:/Users/AAA`）下的排查快照。
+> 配置文件链接已映射至本机真实位置 `C:/Users/Administrator/.gemini/config/mcp_config.json`；
+> 正文中的 `D:/ZZZ/Documents/Antigravity IDE`、`D:/AI_Agent_Study` 为当时的工作区授权路径，属历史事实，本机均已不存在，故保持原样。
+
+---
+
 ### [2026-06-11 13:04:20] 修复 MCP 配置文件中非活跃或非官方发布的 `server-fetch` npm 包名
 
 ---
@@ -30,7 +36,7 @@
 
 ### 1. 修改配置文件
 配置文件路径：
-[mcp_config.json](file:///C:/Users/AAA/.gemini/config/mcp_config.json)
+[mcp_config.json](file:///C:/Users/Administrator/.gemini/config/mcp_config.json)
 
 将原配置中的 `fetch` 服务包名进行替换：
 - **修改前**：`@modelcontextprotocol/server-fetch`
@@ -59,12 +65,12 @@
 
 ### 2. 根因剖析
 - 经过日志排查，系统在 `mcp_manager` 载入过程中报错 `failed to get server directory`。
-- 检查 `C:/Users/AAA/.gemini/config/mcp_config.json` 的配置，`filesystem` 的 args 仅被授权了原工作区路径 `D:/ZZZ/Documents/Antigravity IDE`。
+- 检查 `C:/Users/Administrator/.gemini/config/mcp_config.json` 的配置，`filesystem` 的 args 仅被授权了原工作区路径 `D:/ZZZ/Documents/Antigravity IDE`。
 - 因为 `AI_Agent_Study` 属于该允许列表之外的路径，当 Agent 探查该空目录时，沙箱规则抛出异常。
 
 ---
 
 ## 解决步骤与优化
 
-1. 规范化修改了 [mcp_config.json](file:///C:/Users/AAA/.gemini/config/mcp_config.json)，将路径列表扩充，增加 `D:/AI_Agent_Study` 的读取权限。
+1. 规范化修改了 [mcp_config.json](file:///C:/Users/Administrator/.gemini/config/mcp_config.json)，将路径列表扩充，增加 `D:/AI_Agent_Study` 的读取权限。
 2. 规范化了斜杠格式，避免在 Windows 下产生过多的转义干扰。

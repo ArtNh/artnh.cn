@@ -1,21 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="100%" height="100%">
-    <defs>
-        <linearGradient id="ecoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#3A86FF" />   <stop offset="100%" stop-color="#06D6A0" /> </linearGradient>
-        <linearGradient id="accentGradient" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#FFBE0B" />   <stop offset="100%" stop-color="#3A86FF" />
-        </linearGradient>
-    </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+    <title>ARTNH · 手绘贴纸标</title>
+    <!-- 与站点亮色手绘体系一致：奶油/亮黄贴纸 + 粗黑描边 + 硬偏移阴影 +
+         电光蓝 A + 珊瑚粉星。全部用路径绘制，不依赖网页字体，16px 仍可辨识。 -->
+    <g transform="rotate(-4 32 32)" stroke-linejoin="round" stroke-linecap="round">
 
-    <path d="M32 4 C48 4, 60 16, 60 32 C60 48, 48 60, 32 60 C14 60, 4 48, 4 32 C4 14, 14 4, 32 4 Z" fill="#1e2229"/>
-          
-    <path d="M18 44 C20 30, 26 18, 32 18 C38 18, 44 30, 46 44" stroke="url(#ecoGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          
-    <path d="M22 36 C28 40, 36 32, 42 36" stroke="url(#accentGradient)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
-          
-    <circle cx="32" cy="18" r="3" fill="#06D6A0"/>
-    <circle cx="22" cy="36" r="2" fill="#FFBE0B"/>
-    <circle cx="42" cy="36" r="2" fill="#3A86FF"/>
-    
-    <path d="M14 48 C24 53, 40 53, 50 48" stroke="#06D6A0" stroke-width="2" stroke-linecap="round" fill="none" stroke-dasharray="2 4" opacity="0.6"/>
+        <!-- 硬偏移阴影（贴纸感） -->
+        <path d="M20 8 C13 8 8 12 7 19 C6 26 6 39 8 47 C9 54 14 57 21 57
+                 C31 58 44 57 50 57 C56 56 58 51 58 44 C59 35 58 21 57 15
+                 C56 9 51 7 44 6 C36 5 27 8 20 8 Z"
+              transform="translate(3 4)" fill="#1B1830" />
+
+        <!-- 亮黄手绘底板：四角各异的不规则轮廓 -->
+        <path d="M20 8 C13 8 8 12 7 19 C6 26 6 39 8 47 C9 54 14 57 21 57
+                 C31 58 44 57 50 57 C56 56 58 51 58 44 C59 35 58 21 57 15
+                 C56 9 51 7 44 6 C36 5 27 8 20 8 Z"
+              fill="#FFD84D" stroke="#1B1830" stroke-width="3" />
+
+        <!-- 手绘 A：黑描边 + 蓝色笔芯，双层笔触 -->
+        <g fill="none">
+            <path d="M18 47 C21 35 26 22 32 17 C38 23 43 36 46 47" stroke="#1B1830" stroke-width="10" />
+            <path d="M18 47 C21 35 26 22 32 17 C38 23 43 36 46 47" stroke="#3B4EFF" stroke-width="6" />
+            <path d="M23 38 C29 39 36 37 41 38" stroke="#1B1830" stroke-width="8" />
+            <path d="M23 38 C29 39 36 37 41 38" stroke="#3B4EFF" stroke-width="4.5" />
+        </g>
+
+        <!-- 珊瑚粉手绘星 -->
+        <path d="M49 11 l2.4 5.6 5.6 2.4 -5.6 2.4 -2.4 5.6 -2.4 -5.6 -5.6 -2.4 5.6 -2.4 z"
+              fill="#FF5D8F" stroke="#1B1830" stroke-width="2" />
+
+        <!-- 薄荷小点，补齐撞色 -->
+        <circle cx="13" cy="49" r="2.6" fill="#2FD6A6" stroke="#1B1830" stroke-width="1.4" />
+    </g>
 </svg>

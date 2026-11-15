@@ -1,0 +1,12 @@
+# 本地工作记忆：含个人环境信息，不公开
+.workbuddy/
+
+# 本机编辑器配置（含机器专属路径）
+.vscode/
+
+# 系统与临时文件
+Thumbs.db
+.DS_Store
+*.tmp
+*.log
+*.swp

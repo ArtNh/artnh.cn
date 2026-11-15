@@ -13,7 +13,7 @@
 
 ### 404 错误页面
 
-#### [NEW] [404.html](file:///d:/ZZZ/Documents/Antigravity%20IDE/ArtNh.cn/404.html)
+#### [NEW] [404.html](../404.html)
 - **结构设计**：
   - 容器居中布局。
   - `card-container` 具备 `perspective` 视距属性。

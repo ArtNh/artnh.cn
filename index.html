@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ARTNH · CUI JIN-LIN</title>
     <meta name="description" content="崔金林 · 空间设计师 · 个人主页" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&family=Syncopate:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&family=Inter:wght@300;400;500&family=Syncopate:wght@400;700&display=swap" rel="stylesheet" />
     <style>
         *, *::before, *::after {
             margin: 0;
@@ -810,64 +810,630 @@
                 letter-spacing: 0.1em;
             }
         }
+        /* ══════════════════════════════════════════════════════════
+           BLOG LAYER · 风格化博客主网
+           追加于门扉样式之后：覆盖旧主页基础布局，门扉/粒子样式全部保留
+           ══════════════════════════════════════════════════════════ */
+        :root {
+            --gold:   #c8b89a;
+            --blue:   #7d8fa8;
+            --violet: #b08bb0;
+            --teal:   #7fa89b;
+            --orange: #d09a6a;
+            --edge:      rgba(200, 184, 154, 0.16);
+            --edge-soft: rgba(240, 237, 232, 0.075);
+            --cn: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+        }
+
+        [hidden] { display: none !important; }
+
+        html { scroll-behavior: smooth; }
+        html, body { font-family: 'Inter', var(--cn); }
+
+        /* 覆盖旧主页的居中 flex 布局 */
+        body {
+            display: block;
+            justify-content: flex-start;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* 全站氛围层：三色星云微光 + 极淡技术网格 */
+        #blog-app::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 62% 52% at 80% 6%,  rgba(200,184,154,.055), transparent 70%),
+                radial-gradient(ellipse 52% 60% at 6% 76%,  rgba(125,143,168,.05),  transparent 70%),
+                radial-gradient(ellipse 44% 44% at 52% 42%, rgba(176,139,176,.035), transparent 70%),
+                repeating-linear-gradient(0deg,  rgba(255,255,255,.011) 0 1px, transparent 1px 46px),
+                repeating-linear-gradient(90deg, rgba(255,255,255,.011) 0 1px, transparent 1px 46px);
+        }
+
+        /* ── Header ── */
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            height: 74px;
+            padding: 0 clamp(1.2rem, 5vw, 4.5rem);
+            border-bottom: 1px solid var(--edge-soft);
+            background: rgba(12, 13, 15, .74);
+            backdrop-filter: blur(18px) saturate(120%);
+            -webkit-backdrop-filter: blur(18px) saturate(120%);
+        }
+        .brand { display: flex; flex-direction: column; gap: 4px; text-decoration: none; flex-shrink: 0; }
+        .brand-mark {
+            font-family: 'Syncopate', sans-serif; font-weight: 700;
+            font-size: 1.02rem; letter-spacing: .24em; color: var(--fg);
+        }
+        .brand-sub { font-size: .54rem; letter-spacing: .17em; color: var(--muted); text-transform: uppercase; }
+        .brand-sub i, .blog-footer i, .art-caption i { color: var(--gold); font-style: normal; padding: 0 4px; }
+        .site-nav { display: flex; gap: .3rem; margin-left: auto; }
+        .site-nav a {
+            font-size: .72rem; letter-spacing: .08em; color: var(--muted);
+            text-decoration: none; padding: .45rem .85rem;
+            border: 1px solid transparent; border-radius: 2px; transition: .25s;
+        }
+        .site-nav a:hover, .site-nav a.is-current {
+            color: var(--fg); border-color: var(--edge); background: rgba(200,184,154,.05);
+        }
+        .wander-chip {
+            display: inline-flex; align-items: center; gap: 9px; flex-shrink: 0;
+            font-family: inherit; font-size: .61rem; letter-spacing: .14em; text-transform: uppercase;
+            color: var(--muted); background: rgba(200,184,154,.04);
+            border: 1px solid var(--edge); border-radius: 20px;
+            padding: .52rem .95rem; cursor: pointer; transition: .3s;
+        }
+        .wander-chip:hover {
+            color: var(--gold); border-color: rgba(200,184,154,.42);
+            background: rgba(200,184,154,.08); transform: translateY(-1px);
+        }
+
+        /* ── 主体容器 ── */
+        .blog-main { max-width: 1440px; margin: 0 auto; padding: 0 clamp(1.2rem, 5vw, 4.5rem); }
+
+        /* ── Hero ── */
+        .hero { padding: clamp(3rem, 7vw, 6rem) 0 2.2rem; }
+        .hero-grid {
+            display: grid; grid-template-columns: 1.15fr .85fr;
+            gap: clamp(2rem, 5vw, 5rem); align-items: center;
+        }
+        .hero-grid > * { min-width: 0; }  /* 防止子项 min-content 撑破单列网格造成横向溢出 */
+        .hero-eyebrow {
+            display: flex; align-items: center; gap: .7rem; margin-bottom: 1.9rem;
+            font-size: .58rem; letter-spacing: .22em; color: var(--muted); text-transform: uppercase;
+        }
+        .sq { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
+        .hero-year { margin-left: auto; color: var(--gold); opacity: .75; }
+        .hero-title {
+            font-size: clamp(2.5rem, 6.2vw, 5.4rem); line-height: 1.14;
+            font-weight: 700; letter-spacing: .02em; margin-bottom: 1.7rem;
+        }
+        .hero-title > span { display: block; }   /* 只作用于两行标题，勿波及内含的 .title-dot */
+        .line-solid { color: var(--fg); }
+        .line-stroke { color: var(--gold); }
+        @supports (-webkit-text-stroke: 1px #000) {
+            .line-stroke {
+                color: transparent;
+                -webkit-text-stroke: 1.5px var(--gold);
+                text-shadow: 0 0 34px rgba(200,184,154,.2);
+            }
+        }
+        .title-dot { color: var(--gold); -webkit-text-stroke: 0; }
+        .hero-desc { font-size: .82rem; line-height: 2.05; color: var(--muted); letter-spacing: .02em; }
+        .hero-stats { display: flex; margin-top: 2.5rem; padding-top: 1.4rem; border-top: 1px solid var(--edge-soft); }
+        .stat { padding-right: 2rem; margin-right: 2rem; border-right: 1px solid var(--edge-soft); }
+        .stat:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+        .stat-num { display: block; font-family: 'Syncopate', sans-serif; font-size: 1.45rem; color: var(--gold); }
+        .stat-label { display: block; margin-top: .35rem; font-size: .55rem; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; }
+
+        /* 纯 CSS 风格化版画 */
+        .hero-art { min-width: 0; }
+        .art-frame {
+            position: relative; aspect-ratio: 1 / 1; overflow: hidden;
+            border: 1px solid var(--edge);
+            background: linear-gradient(155deg, rgba(24,26,32,.92), rgba(9,10,13,.96));
+            clip-path: polygon(0 0, 100% 0, 100% 87%, 87% 100%, 0 100%);
+        }
+        .art-grid {
+            position: absolute; inset: 0; opacity: .55;
+            background:
+                repeating-linear-gradient(0deg,  rgba(200,184,154,.055) 0 1px, transparent 1px 38px),
+                repeating-linear-gradient(90deg, rgba(200,184,154,.055) 0 1px, transparent 1px 38px);
+        }
+        .art-orb {
+            position: absolute; top: 15%; left: 20%; width: 60%; aspect-ratio: 1; border-radius: 50%;
+            background: radial-gradient(circle at 34% 28%, rgba(200,184,154,.34), rgba(125,143,168,.13) 46%, transparent 72%);
+            box-shadow: inset 0 0 70px rgba(176,139,176,.14);
+        }
+        .art-slice { position: absolute; transform: skewY(-14deg); }
+        .art-slice.s1 { left: -8%; top: 54%; width: 74%; height: 13%; background: rgba(200,184,154,.14); border-top: 1px solid rgba(200,184,154,.3); }
+        .art-slice.s2 { left: 12%; top: 66%; width: 96%; height: 8%;  background: rgba(125,143,168,.13); }
+        .art-slice.s3 { left: 30%; top: 74%; width: 82%; height: 5%;  background: rgba(176,139,176,.15); }
+        .art-ring {
+            position: absolute; top: 8%; right: 7%; width: 30%; aspect-ratio: 1;
+            border: 1px solid rgba(200,184,154,.3); border-radius: 50%;
+        }
+        .art-ring::after {
+            content: ''; position: absolute; inset: 22%; border: 1px solid rgba(176,139,176,.28); border-radius: 50%;
+        }
+        .art-label {
+            position: absolute; left: 16px; bottom: 18px;
+            font-size: .54rem; letter-spacing: .2em; color: var(--gold); text-transform: uppercase;
+        }
+        .art-index {
+            position: absolute; right: 18px; top: 12px;
+            font-family: 'Syncopate', sans-serif; font-size: 2.6rem; color: rgba(240,237,232,.1); line-height: 1;
+        }
+        .art-cross { position: absolute; font-size: .8rem; color: rgba(200,184,154,.45); }
+        .art-cross.c1 { left: 12px; top: 10px; }
+        .art-cross.c2 { right: 12px; bottom: 26px; }
+        .art-caption {
+            margin-top: .8rem; font-size: .55rem; letter-spacing: .2em;
+            color: var(--muted); text-align: right; text-transform: uppercase;
+        }
+
+        .hero-ticker {
+            display: flex; margin-top: 2.6rem;
+            border-top: 1px solid var(--edge-soft); border-bottom: 1px solid var(--edge-soft);
+        }
+        .tick {
+            flex: 1; min-width: 0; padding: .85rem 1rem; border-right: 1px solid var(--edge-soft);
+            font-size: .6rem; letter-spacing: .08em; color: var(--muted);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .tick:last-child { border-right: 0; }
+        .tick b { color: var(--gold); font-weight: 400; margin-right: .55rem; }
+
+        /* ── 文章档案 ── */
+        .feed { padding: 3.4rem 0 4rem; }
+        .feed-head {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            gap: 1.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+        }
+        .feed-title { display: flex; align-items: baseline; gap: 1rem; }
+        .feed-index { font-family: 'Syncopate', sans-serif; font-size: .64rem; color: var(--gold); letter-spacing: .1em; }
+        .feed-title h2, .about-left h2 { font-size: 1.45rem; font-weight: 500; letter-spacing: .06em; }
+        .feed-title em, .about-left em {
+            font-style: normal; font-size: .58rem; letter-spacing: .22em;
+            color: var(--muted); margin-left: .55rem;
+        }
+        .feed-count { font-size: .58rem; letter-spacing: .14em; color: var(--muted); }
+        .feed-tools { display: flex; gap: .55rem; }
+        .search-box {
+            display: flex; align-items: center; gap: .5rem; height: 38px; min-width: 240px;
+            padding: 0 .8rem; border: 1px solid var(--edge-soft);
+            background: rgba(255,255,255,.02); transition: .25s;
+        }
+        .search-box:focus-within { border-color: rgba(200,184,154,.45); background: rgba(200,184,154,.04); }
+        .search-icon { color: var(--gold); font-size: 1.05rem; line-height: 1; }
+        .search-box input {
+            width: 100%; background: none; border: 0; outline: 0; color: var(--fg);
+            font-family: inherit; font-size: .72rem;
+        }
+        .search-box input::placeholder { color: #62635f; }
+        .sort-btn {
+            font-family: inherit; font-size: .66rem; letter-spacing: .08em; color: var(--muted);
+            background: rgba(255,255,255,.02); border: 1px solid var(--edge-soft);
+            padding: 0 .9rem; cursor: pointer; white-space: nowrap; transition: .25s;
+        }
+        .sort-btn:hover { color: var(--gold); border-color: var(--edge); }
+
+        .filter-row {
+            display: flex; gap: .38rem; flex-wrap: wrap;
+            margin-bottom: 1.4rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--edge-soft);
+        }
+        .chip {
+            --c: var(--gold);
+            display: inline-flex; align-items: center; gap: .5rem;
+            font-family: inherit; font-size: .65rem; letter-spacing: .1em;
+            padding: .48rem .9rem; border: 1px solid var(--edge-soft);
+            background: transparent; color: var(--muted); cursor: pointer; transition: .25s;
+        }
+        .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--c); opacity: .75; }
+        .chip-n { font-size: .54rem; opacity: .6; }
+        .chip:hover { color: var(--fg); border-color: var(--edge); }
+        .chip.active { background: var(--c); border-color: var(--c); color: #111214; font-weight: 500; }
+        .chip.active .chip-dot { background: #111214; opacity: .55; }
+        .chip.active .chip-n { opacity: .7; }
+
+        /* ── 卡片网格（密集铺满） ── */
+        .post-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: dense; gap: 12px; }
+        .post-card {
+            --c: var(--gold);
+            position: relative; display: flex; flex-direction: column; min-height: 262px;
+            background: linear-gradient(160deg, rgba(24,26,31,.84), rgba(13,14,17,.92));
+            border: 1px solid var(--edge-soft); overflow: hidden; cursor: pointer;
+            text-decoration: none; color: inherit;
+            transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s;
+        }
+        .post-card:hover {
+            transform: translateY(-4px); border-color: rgba(200,184,154,.38);
+            box-shadow: 0 18px 46px rgba(0,0,0,.5);
+        }
+        .post-card::after {
+            content: ''; position: absolute; top: 0; left: -60%; width: 42%; height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(200,184,154,.075), transparent);
+            transform: skewX(-18deg); transition: left .7s ease; pointer-events: none;
+        }
+        .post-card:hover::after { left: 135%; }
+        .post-card.featured { grid-column: span 2; }
+        .card-visual {
+            position: relative; height: 92px; flex-shrink: 0; overflow: hidden;
+            border-bottom: 1px solid var(--edge-soft);
+            background:
+                linear-gradient(115deg, rgba(200,184,154,.12), transparent 62%),
+                repeating-linear-gradient(115deg, rgba(255,255,255,.018) 0 1px, transparent 1px 13px);
+        }
+        .card-visual::after {
+            content: ''; position: absolute; top: -58px; right: -26px;
+            width: 150px; height: 150px; border: 1px solid var(--c); border-radius: 50%; opacity: .22;
+        }
+        .card-no {
+            position: absolute; left: 14px; bottom: -6px;
+            font-family: 'Syncopate', sans-serif; font-size: 2.5rem;
+            color: var(--c); opacity: .2; line-height: 1;
+        }
+        .cv-tag {
+            position: absolute; right: 12px; top: 12px;
+            font-size: .53rem; letter-spacing: .18em; color: var(--c);
+            border: 1px solid currentColor; padding: 3px 8px; text-transform: uppercase;
+        }
+        .card-body { display: flex; flex-direction: column; flex: 1; padding: 1.05rem 1.15rem 1.1rem; }
+        .card-meta {
+            display: flex; gap: .8rem; margin-bottom: .7rem;
+            font-size: .56rem; letter-spacing: .1em; color: var(--muted); text-transform: uppercase;
+        }
+        .card-meta .cat { color: var(--c); }
+        .card-title { font-size: .98rem; font-weight: 500; line-height: 1.5; letter-spacing: .02em; margin-bottom: .5rem; }
+        .post-card.featured .card-title { font-size: 1.18rem; }
+        .card-excerpt {
+            flex: 1; font-size: .71rem; line-height: 1.75; color: var(--muted);
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .card-foot {
+            display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+            margin-top: 1rem; padding-top: .75rem; border-top: 1px solid var(--edge-soft);
+        }
+        .card-tags { display: flex; gap: .32rem; flex-wrap: wrap; }
+        .card-tags span { font-size: .54rem; color: var(--muted); border: 1px solid var(--edge-soft); padding: 2px 6px; }
+        .card-read { font-size: .56rem; color: var(--gold); white-space: nowrap; }
+
+        .empty-state { text-align: center; padding: 5rem 1rem; color: var(--muted); }
+        .empty-glyph { font-size: 3rem; color: var(--gold); opacity: .4; line-height: 1; }
+        .empty-state p { font-size: .78rem; margin: 1rem 0 1.4rem; }
+        .empty-state button {
+            font-family: inherit; font-size: .66rem; letter-spacing: .1em; color: var(--gold);
+            background: none; border: 1px solid var(--edge); padding: .55rem 1.1rem; cursor: pointer;
+        }
+        .empty-state button:hover { background: rgba(200,184,154,.07); }
+
+        /* ── 关于 / 外链 ── */
+        .about-strip {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+            padding: 3.4rem 0; border-top: 1px solid var(--edge-soft);
+        }
+        .about-left h2 { margin: .8rem 0 1.1rem; }
+        .about-left p { font-size: .78rem; line-height: 2.05; color: var(--muted); max-width: 34rem; }
+        .about-links { display: flex; flex-direction: column; }
+        .about-link {
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 1rem .2rem; border-top: 1px solid var(--edge-soft);
+            text-decoration: none; color: var(--fg); transition: .25s;
+        }
+        .about-link:last-child { border-bottom: 1px solid var(--edge-soft); }
+        .about-link:hover { color: var(--gold); padding-left: .6rem; }
+        .about-link strong { font-size: .8rem; letter-spacing: .1em; font-weight: 400; }
+        .about-link small { font-size: .6rem; color: var(--muted); }
+        .about-link span { color: var(--gold); }
+
+        .blog-footer {
+            display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+            padding: 1.6rem clamp(1.2rem, 5vw, 4.5rem);
+            border-top: 1px solid var(--edge-soft);
+            font-size: .56rem; letter-spacing: .14em; color: #62635f; text-transform: uppercase;
+        }
+        .blog-footer a { color: var(--muted); text-decoration: none; }
+        .blog-footer a:hover { color: var(--gold); }
+
+        /* ── 文章阅读层 ── */
+        .reader {
+            position: fixed; inset: 0; z-index: 200; overflow-y: auto;
+            background: rgba(9, 10, 13, .95);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            animation: fadeUp .4s ease both;
+        }
+        .reader-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: rgba(255,255,255,.05); z-index: 5; }
+        .reader-progress span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--violet)); transition: width .1s linear; }
+        .reader-bar {
+            position: sticky; top: 0; z-index: 4; display: flex; align-items: center; gap: 1.2rem;
+            padding: 1rem clamp(1.2rem, 5vw, 4.5rem);
+            border-bottom: 1px solid var(--edge-soft);
+            background: rgba(9,10,13,.86); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+        }
+        .reader-back, .reader-gate {
+            font-family: inherit; font-size: .65rem; letter-spacing: .1em; color: var(--muted);
+            background: none; border: 1px solid var(--edge-soft); padding: .5rem .9rem;
+            cursor: pointer; transition: .25s;
+        }
+        .reader-back:hover, .reader-gate:hover { color: var(--gold); border-color: var(--gold); }
+        .reader-crumb { margin-left: auto; font-size: .6rem; letter-spacing: .14em; color: var(--muted); }
+        .reader-body { max-width: 760px; margin: 0 auto; padding: clamp(3rem, 7vw, 5.5rem) 1.5rem 3rem; }
+        .reader-kicker { font-size: .58rem; letter-spacing: .22em; color: var(--gold); text-transform: uppercase; }
+        .reader-title { font-size: clamp(1.8rem, 4.4vw, 2.85rem); line-height: 1.35; font-weight: 600; letter-spacing: .02em; margin: .9rem 0 .6rem; }
+        .reader-sub { font-size: .88rem; color: var(--muted); line-height: 1.8; }
+        .reader-meta {
+            display: flex; gap: 1.1rem; flex-wrap: wrap;
+            padding: 1.3rem 0; margin: 1.8rem 0 2.6rem;
+            border-top: 1px solid var(--edge-soft); border-bottom: 1px solid var(--edge-soft);
+            font-size: .6rem; letter-spacing: .12em; color: var(--muted);
+        }
+        .reader-meta b { color: var(--gold); font-weight: 400; }
+        .reader-content { font-size: .92rem; line-height: 2.05; color: #d8d5cf; }
+        .reader-content p { margin-bottom: 1.5rem; }
+        .reader-content h2 {
+            font-size: 1.22rem; font-weight: 500; color: var(--fg); letter-spacing: .03em;
+            margin: 2.8rem 0 1rem; padding-left: .9rem; border-left: 2px solid var(--gold);
+        }
+        .reader-content strong { color: var(--fg); font-weight: 500; }
+        .reader-content em { color: var(--gold); font-style: normal; }
+        .reader-content ul { margin: 0 0 1.6rem; padding-left: 1.3rem; }
+        .reader-content li { margin-bottom: .65rem; }
+        .reader-content li::marker { color: var(--gold); }
+        .reader-content blockquote {
+            margin: 2rem 0; padding: 1.1rem 1.4rem; border-left: 2px solid var(--violet);
+            background: rgba(176,139,176,.055); color: var(--fg); font-size: .88rem; line-height: 1.9;
+        }
+        .reader-content code {
+            font-family: ui-monospace, Consolas, monospace; font-size: .82em; color: var(--gold);
+            background: rgba(200,184,154,.08); padding: .1rem .35rem;
+        }
+        .reader-content pre {
+            margin: 1.6rem 0; padding: 1.1rem 1.3rem; overflow-x: auto;
+            background: rgba(255,255,255,.03); border: 1px solid var(--edge-soft);
+            font-size: .77rem; line-height: 1.8; color: var(--blue);
+        }
+        .reader-content pre code { background: none; padding: 0; color: inherit; }
+        .reader-nav { max-width: 760px; margin: 0 auto; padding: 0 1.5rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .rnav {
+            display: flex; flex-direction: column; gap: .5rem; padding: 1.2rem;
+            border: 1px solid var(--edge-soft); text-decoration: none; color: var(--fg); transition: .25s;
+        }
+        .rnav:hover { border-color: var(--gold); background: rgba(200,184,154,.04); }
+        .rnav small { font-size: .56rem; letter-spacing: .14em; color: var(--muted); }
+        .rnav strong { font-size: .8rem; font-weight: 400; line-height: 1.6; }
+        .rnav.next { text-align: right; align-items: flex-end; }
+
+        /* ── 响应式 ── */
+        @media (max-width: 1080px) {
+            .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 820px) {
+            .site-nav { display: none; }
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-art { max-width: 420px; }
+            .about-strip { grid-template-columns: 1fr; gap: 2rem; }
+            .feed-head { align-items: flex-start; flex-direction: column; }
+            .feed-tools { width: 100%; }
+            .search-box { flex: 1; min-width: 0; }
+        }
+        @media (max-width: 560px) {
+            .post-grid { grid-template-columns: 1fr; }
+            .post-card.featured { grid-column: span 1; }
+            .hero-desc { font-size: .76rem; }
+            .hero-desc br { display: none; } /* 让长句自然换行，避免被右边缘裁切 */
+            .hero-stats { flex-wrap: wrap; row-gap: 1rem; }
+            .stat { flex: 1 1 28%; min-width: 0; padding-right: .5rem; margin-right: .5rem; }
+            .stat:last-child { padding-right: 0; margin-right: 0; }
+            .stat-num { font-size: 1.05rem; }
+            .stat-label { font-size: .46rem; letter-spacing: .04em; }
+            .hero-art { width: 100%; }
+            .art-frame { width: 100%; }
+            .hero-ticker { flex-wrap: wrap; }
+            .tick { flex: 1 1 50%; border-bottom: 1px solid var(--edge-soft); }
+            .filter-row { flex-wrap: nowrap; overflow-x: auto; }
+            .chip { white-space: nowrap; }
+            .reader-nav { grid-template-columns: 1fr; }
+            body { padding-top: 0; } /* 覆盖旧 404 移动端适配里的 5.5rem */
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            .post-card, .post-card::after, .reader { transition: none; animation: none; }
+        }
     </style>
+    <!-- 亮色动漫撞色主题：后置于内联样式，同名规则覆盖暗色 BLOG LAYER；
+         移除这一行即可一键回退到上一版深空主题 -->
+    <link rel="stylesheet" href="theme.css?v=1" />
 </head>
 <body>
+
+    <!-- 全局手绘滤镜：给 SVG 线条加轻微不规则抖动，模拟笔触（只作用于图形，不动文字） -->
+    <svg class="svg-defs" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="rough" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.038" numOctaves="2" seed="9" result="n" />
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- 全局鼠标点击迸发层（pointer-events:none，不拦截任何交互） -->
+    <div class="click-layer" id="click-layer" aria-hidden="true"></div>
 
     <!-- Canvas 动态粒子背景（置于最底层） -->
     <canvas id="space-canvas"></canvas>
 
-    <!-- 左上角 Wander 入口小板块 -->
-    <div class="wander-corner a1">
-        <a href="#wander" id="btn-wander-gate" title="进入迷航与邂逅">
-            <span>Wander 宇宙邂逅</span>
-            <span class="wander-dot"></span>
-        </a>
+    <!-- ══════════════ 博客主网 ══════════════ -->
+    <div id="blog-app">
+
+        <!-- 漂浮涂鸦层：纯 CSS 动效，不参与交互 -->
+        <div class="doodle-field" aria-hidden="true">
+            <span class="doodle d1"></span>
+            <span class="doodle d2"></span>
+            <span class="doodle d3"></span>
+            <span class="doodle d4"></span>
+        </div>
+
+        <header class="site-header">
+            <a class="brand" href="#home" aria-label="回到博客首页">
+                <span class="brand-mark">ARTNH</span>
+                <span class="brand-sub">CUI JIN-LIN <i>/</i> NPR JOURNAL</span>
+            </a>
+            <nav class="site-nav" aria-label="主导航">
+                <a href="#home" data-nav="home">首页</a>
+                <a href="#category/works" data-nav="works">作品</a>
+                <a href="#category/notes" data-nav="notes">笔记</a>
+                <a href="#category/tutorials" data-nav="tutorials">教程</a>
+                <a href="#about" data-nav="about">关于</a>
+            </nav>
+            <button class="wander-chip" id="btn-wander-gate" title="进入迷航与邂逅 · 宇宙门扉">
+                <span class="wander-dot"></span><span>Wander</span>
+            </button>
+        </header>
+
+        <main class="blog-main">
+
+            <!-- ── Hero：只留一个焦点 ── -->
+            <section class="hero">
+                <div class="pop-grid">
+                    <div class="pop-copy reveal">
+                        <span class="pop-sticker">HELLO! I'M ARTNH ✦</span>
+                        <h1 class="pop-title">把空间<br><span class="wobble">渲成风格</span><span class="bang">!</span></h1>
+                        <p class="pop-desc">环境设计出身，现在在 Blender 里折腾 <span class="nowrap">NPR / 三渲二</span>。<br>这里放作品、绑骨实验，和每天捡回来的审美碎片。</p>
+                        <div class="pop-actions">
+                            <a class="btn btn-solid" href="#feed">看文章 ↗</a>
+                            <button class="btn btn-ghost" id="hero-about">关于我 ✦</button>
+                        </div>
+                        <span class="scribble">scroll down</span>
+                    </div>
+
+                    <!-- 平涂星球插画：一个有机视觉主角，取代原来的密集版画 -->
+                    <div class="hero-stage reveal" aria-hidden="true">
+                        <div class="blob blob-1"></div>
+                        <div class="blob blob-2"></div>
+                        <div class="blob blob-3"></div>
+                        <div class="stage-ring"></div>
+                        <div class="stage-orb">
+                            <svg class="orb-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg">
+                                <!-- 轨道：缓慢摆动 -->
+                                <ellipse class="orb-track" cx="160" cy="160" rx="146" ry="58" fill="none" stroke="#1B1830" stroke-width="5" />
+                                <!-- 星球：呼吸 + 浮动 -->
+                                <g class="orb-planet">
+                                    <circle cx="160" cy="160" r="94" fill="#3B4EFF" stroke="#1B1830" stroke-width="6" />
+                                    <path d="M66 160 A94 94 0 0 1 254 160 Z" fill="#FFD84D" />
+                                    <path d="M66 160 H254" stroke="#1B1830" stroke-width="5" />
+                                    <path d="M160 66 A94 94 0 0 0 160 254" fill="none" stroke="#1B1830" stroke-width="4" opacity=".35" />
+                                    <circle cx="96" cy="238" r="7" fill="#FFFDF8" stroke="#1B1830" stroke-width="3" />
+                                </g>
+                                <!-- 粉色卫星：绕星球公转 -->
+                                <g class="orb-orbit">
+                                    <circle class="orb-satellite" cx="274" cy="66" r="22" fill="#FF5D8F" stroke="#1B1830" stroke-width="5" />
+                                </g>
+                                <path class="orb-star" d="M38 44 l9 20 20 9 -20 9 -9 20 -9-20 -20-9 20-9z" fill="#2FD6A6" stroke="#1B1830" stroke-width="4" />
+                                <circle class="orb-dot" cx="252" cy="258" r="12" fill="#FF9F1C" stroke="#1B1830" stroke-width="4" />
+                                <!-- 手绘涂鸦线：dash 持续流动，是最容易被看见的「动」 -->
+                                <path class="orb-scribble" d="M22 214 C58 182 88 240 132 208 S212 178 258 214 S300 236 312 206" />
+                                <path class="orb-scribble orb-scribble-2" d="M36 96 C70 66 96 118 132 92" />
+                            </svg>
+                        </div>
+                        <span class="stage-badge badge-1">NPR ✦</span>
+                        <span class="stage-badge badge-2">3D → 2D</span>
+                        <span class="stage-star s1">✦</span>
+                        <span class="stage-star s2">✦</span>
+                    </div>
+                </div>
+                <svg class="wave-sep" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+                    <g class="wave-layer wave-back">
+                        <path class="wave-fill-alt" d="M0,72 C160,26 300,110 480,70 C660,30 820,108 1000,68 C1180,28 1320,102 1440,62 L1440,120 L0,120 Z" />
+                    </g>
+                    <g class="wave-layer wave-mid">
+                        <path class="wave-fill" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72 L1440,120 L0,120 Z" />
+                        <path class="wave-ink" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72" />
+                    </g>
+                    <path class="wave-dash" d="M0,102 C200,66 340,134 560,98 C780,62 940,130 1160,96 C1320,70 1390,112 1440,98" />
+                    <path class="wave-dash wave-dash-2" d="M0,44 C220,12 380,82 600,46 C820,10 980,78 1200,44 C1340,20 1400,56 1440,42" />
+                </svg>
+            </section>
+
+            <!-- ── 文章档案：先露 4 篇精选，展开才给全部 ── -->
+            <section class="feed" id="feed">
+                <div class="section-head reveal">
+                    <span class="section-kicker">02 / ARCHIVE</span>
+                    <h2 class="section-title">最近在折腾<span class="dot-accent">●</span></h2>
+                    <p class="section-note">先挑几篇最想给你看的，剩下的都在档案里。</p>
+                </div>
+                <div class="feed-tools" id="feed-tools" hidden>
+                    <label class="search-box">
+                        <span class="search-icon">⌕</span>
+                        <input type="search" id="post-search" placeholder="搜索标题 / 标签 / 摘要" autocomplete="off" />
+                    </label>
+                    <button class="sort-btn" id="sort-btn" title="切换排序方式">最新 ▾</button>
+                </div>
+                <div class="filter-row" id="filter-row" hidden></div>
+                <div class="post-grid" id="post-grid"></div>
+                <div class="empty-state" id="empty-state" hidden>
+                    <div class="empty-glyph">∅</div>
+                    <p>这个格子里暂时空空的。</p>
+                    <button id="empty-reset">清除筛选</button>
+                </div>
+                <div class="feed-more">
+                    <button class="btn btn-solid" id="show-all-btn">展开全部 10 篇 ↗</button>
+                    <span class="feed-count" id="feed-count"></span>
+                </div>
+            </section>
+
+            <!-- ── 关于：满幅亮黄分镜格 ── -->
+            <section class="about-strip" id="about">
+                <svg class="wave-sep" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+                    <g class="wave-layer wave-back">
+                        <path class="wave-fill-alt" d="M0,72 C160,26 300,110 480,70 C660,30 820,108 1000,68 C1180,28 1320,102 1440,62 L1440,120 L0,120 Z" />
+                    </g>
+                    <g class="wave-layer wave-mid">
+                        <path class="wave-fill" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72 L1440,120 L0,120 Z" />
+                        <path class="wave-ink" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72" />
+                    </g>
+                    <path class="wave-dash" d="M0,102 C200,66 340,134 560,98 C780,62 940,130 1160,96 C1320,70 1390,112 1440,98" />
+                    <path class="wave-dash wave-dash-2" d="M0,44 C220,12 380,82 600,46 C820,10 980,78 1200,44 C1340,20 1400,56 1440,42" />
+                </svg>
+                <div class="about-inner">
+                    <div class="about-left reveal">
+                        <span class="section-kicker">03 / ABOUT</span>
+                        <h2>关于我<span class="dot-accent">●</span></h2>
+                        <p>崔金林 · 环境设计专业本科。现在主要做 Blender 风格化 NPR 建模与三渲二，顺手造一些自用工具。这里是不带滤镜的工作日志。</p>
+                    </div>
+                    <div class="about-links reveal" id="about-links"></div>
+                </div>
+            </section>
+        </main>
+
+        <div class="blog-footer">
+            <span>© 2026 ARTNH.CN <i>·</i> CUI JIN-LIN</span>
+            <span>BUILD WITH STARDUST <i>·</i> NO FRAMEWORK, NO BUILD STEP</span>
+            <button class="to-top" id="to-top" type="button">回到顶部 ↑</button>
+        </div>
     </div>
 
-    <h1 class="name a1">
-        ARTNH
-        <span class="name-sub">CUI &nbsp;JIN-LIN</span>
-    </h1>
-
-    <div class="divider a2"></div>
-
-    <p class="bio a3">
-        空间设计师 &nbsp;·&nbsp; 环境设计探索<br>
-        陕西理工大学艺术学院 &nbsp;·&nbsp; 环境设计专业
-    </p>
-
-    <nav class="links a4">
-        <a class="link-item" href="https://www.artnh.cn" target="_blank" rel="noopener">
-            <div class="link-info">
-                <span class="link-title">Portfolio</span>
-                <span class="link-hint">www.artnh.cn &nbsp;·&nbsp; 作品集</span>
-            </div>
-            <span class="arrow">↗</span>
-        </a>
-
-        <a class="link-item" href="https://art.artnh.cn/" target="_blank" rel="noopener">
-            <div class="link-info">
-                <span class="link-title">Art Gallery</span>
-                <span class="link-hint">art.artnh.cn &nbsp;·&nbsp; 作品档案馆</span>
-            </div>
-            <span class="arrow">↗</span>
-        </a>
-
-        <a class="link-item" href="https://github.com/ArtNh" target="_blank" rel="noopener">
-            <div class="link-info">
-                <span class="link-title">GitHub</span>
-                <span class="link-hint">github.com/ArtNh &nbsp;·&nbsp; 代码仓库</span>
-            </div>
-            <span class="arrow">↗</span>
-        </a>
-
-    </nav>
-
-    <footer>© 2025 &nbsp;CUI JIN-LIN &nbsp;·&nbsp; ARTNH.CN</footer>
+    <!-- ══════════════ 文章阅读层 ══════════════ -->
+    <div id="post-reader" class="reader" hidden>
+        <div class="reader-progress"><span id="reader-progress-bar"></span></div>
+        <div class="reader-bar">
+            <button class="reader-back" id="reader-back">← 返回档案</button>
+            <span class="reader-crumb" id="reader-crumb"></span>
+            <button class="reader-gate" id="reader-gate" title="唤起宇宙门扉">✧ Wander</button>
+        </div>
+        <article class="reader-body" id="reader-body"></article>
+        <div class="reader-nav" id="reader-nav"></div>
+    </div>
 
     <!-- 404 全屏冷调磨砂模糊覆盖层 -->
-    <div id="error-overlay" class="active">
+    <div id="error-overlay" class="hidden">
         <!-- NASA 全屏星空探索模式容器 -->
         <div class="fullscreen-bg" id="fs-bg"></div>
 
@@ -899,7 +1465,7 @@
                             <div class="shine-overlay"></div>
                             
                             <div class="card-header">
-                                <div class="status-badge">Lost in deep space</div>
+                                <div class="status-badge">哎呀 · 迷路啦</div>
                                 <div class="system-time">ERR_404</div>
                             </div>
                             <div class="card-body">
@@ -907,13 +1473,13 @@
                                     404
                                     <span class="glitch-sub">not found</span>
                                 </div>
-                                <h2 class="scene-title">【第一幕：迷航】</h2>
-                                <p class="scene-desc">我们在群星的脉冲中丢失了彼此的信号。<br>这里是无尽的冷寂，唯有光线在引力下微微偏折。</p>
+                                <h2 class="scene-title">这一格，走丢了 ✦</h2>
+                                <p class="scene-desc">这条路暂时没画完，星图上也没标。<br>点一下卡片，翻到背面看看。</p>
                             </div>
                             <div class="card-footer">
                                 <div class="hover-hint">
                                     <span class="hint-icon">✧</span>
-                                    <span class="hint-text">将视线停留，偏折光线</span>
+                                    <span class="hint-text">点一下，翻到背面 ✦</span>
                                 </div>
                             </div>
                         </div>
@@ -924,22 +1490,22 @@
                             <div class="shine-overlay"></div>
             
                             <div class="card-header">
-                                <div class="status-badge">Signal established</div>
+                                <div class="status-badge">找到你啦！</div>
                                 <div class="system-time">COOR_FOUND</div>
                             </div>
                             <div class="card-body">
-                                <h2 class="scene-title">【第二幕：邂逅】</h2>
-                                <p class="scene-desc">光年之外，星河横流。<br>终在此处与你重逢，这是一颗属于我们的星球。</p>
+                                <h2 class="scene-title">又见面啦 ✦</h2>
+                                <p class="scene-desc">原来你在这儿。<br>带一张星空走，或者回主页继续逛。</p>
                             </div>
                             <div class="card-footer" style="flex-direction: column; width: 100%;">
-                                <button class="btn btn-capture" id="btn-download" title="捕获这片星空" style="width: 100%; margin-bottom: 5px;">
-                                    <span>捕获星空</span>
+                                <button class="btn btn-capture" id="btn-download" title="带一张星空走" style="width: 100%; margin-bottom: 5px;">
+                                    <span>带张星空走 ✦</span>
                                 </button>
                                 <div class="earth-link-container">
                                     <a class="earth-link" id="btn-back-to-earth" href="#home" title="返回主页">
                                         <div class="earth-info">
-                                            <span class="earth-title">Return to Earth</span>
-                                            <span class="earth-hint">返回地球 · 个人主页</span>
+                                            <span class="earth-title">返回主页</span>
+                                            <span class="earth-hint">回到文章档案 · ARTNH</span>
                                         </div>
                                         <span class="earth-arrow">↗</span>
                                     </a>
@@ -953,7 +1519,11 @@
         </div>
     </div>
 
-    <!-- ── JavaScript：星尘渲染与无刷新单页 404 路由 ── -->
+    <!-- 文章数据层：用 script 标签加载，双击 index.html（file://）也能跑；
+         若改用 fetch + posts.json，本地协议会被 CORS 拦下 -->
+    <script src="posts.js"></script>
+
+    <!-- ── JavaScript：星尘渲染、博客渲染与无刷新单页路由 ── -->
     <script>
         // ── Canvas 动态星空粒子 ──
         const canvas = document.getElementById('space-canvas');
@@ -1175,7 +1745,11 @@
             requestAnimationFrame(animate);
         }
 
-        animate();
+        // 性能根治：亮色主题下不启动星尘循环。
+        // 180 粒子 + 每帧多次全屏径向渐变是彩蛋卡顿的主因，而 canvas 在亮色主题里
+        // 只有 .09 透明度、肉眼几乎不可见。移除 theme.css 的 <link> 即自动恢复暗色动画。
+        const LIGHT_THEME_ON = !!document.querySelector('link[href*="theme.css"]');
+        if (!LIGHT_THEME_ON) animate();
 
 
         // ── 3D 偏斜与光影扫光 ──
@@ -1195,7 +1769,8 @@
         window.addEventListener('mousemove', (e) => {
             globalMouseX = e.clientX;
             globalMouseY = e.clientY;
-            if (!fsBg.classList.contains('active')) {
+            // 亮色主题不做 3D 倾斜：省掉全局 mousemove 重算，也去掉旧资产的歪斜感
+            if (!LIGHT_THEME_ON && !fsBg.classList.contains('active')) {
                 updateCardRotation(e);
             }
         });
@@ -1211,10 +1786,11 @@
             card.querySelectorAll('.shine-overlay').forEach(shine => {
                 shine.style.opacity = '0';
             });
-            updateCardRotation();
+            if (!LIGHT_THEME_ON) updateCardRotation();
         });
 
         cardContainer.addEventListener('mousemove', (e) => {
+            if (LIGHT_THEME_ON) return;   // 亮色主题没有扫光层，跳过全部逐帧 DOM 写入
             if (!isHovered) return;
             const rect = cardContainer.getBoundingClientRect();
             const localX = e.clientX - rect.left;
@@ -1262,6 +1838,11 @@
         }
 
         function updateCardRotation(e) {
+            // 亮色主题：只做干净的 Y 轴翻牌，不叠加 3D 倾斜
+            if (LIGHT_THEME_ON) {
+                card.style.transform = isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+                return;
+            }
             const rect = cardContainer.getBoundingClientRect();
             const cardW = rect.width;
             const cardH = rect.height;
@@ -1383,10 +1964,215 @@
         });
 
 
-        // ── 门扉遮罩与状态托管 ──
-        const errorOverlay = document.getElementById('error-overlay');
-        const btnBackToEarth = document.getElementById('btn-back-to-earth');
-        const btnWanderGate = document.getElementById('btn-wander-gate');
+        // ══════════════════════════════════════════════════
+        //  BLOG ENGINE · 零构建静态渲染
+        // ══════════════════════════════════════════════════
+        const POSTS = window.BLOG_POSTS || [];
+        const META  = window.BLOG_META  || { categories: [], links: [] };
+        const CATS  = META.categories;
+        const catById = Object.fromEntries(CATS.map(c => [c.id, c]));
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g,
+            ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+        const catOf = (p) => catById[p.category] || CATS[0] || { label:'未分类', en:'OTHER', color:'#c8b89a' };
+
+        let activeCat = 'all';
+        let query = '';
+        let sortDesc = true;
+        let showAll = false;                 // 首页只露精选，展开后才给全部 + 筛选工具
+
+        /* ── 滚动入场（静态元素；卡片另用纯 CSS stagger，避免与 hover transform 打架） ── */
+        function initReveal() {
+            const nodes = document.querySelectorAll('.reveal');
+            if (!('IntersectionObserver' in window)) {
+                nodes.forEach(n => n.classList.add('in'));
+                return;
+            }
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(en => {
+                    if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+            nodes.forEach(n => io.observe(n));
+        }
+
+        /* ── 分类筛选 ── */
+        function renderFilters() {
+            $('filter-row').innerHTML = CATS.map(c => {
+                const n = c.id === 'all' ? POSTS.length : POSTS.filter(p => p.category === c.id).length;
+                return `<button class="chip${activeCat === c.id ? ' active' : ''}" data-cat="${c.id}" style="--c:${c.color}">
+                    <span class="chip-dot"></span>${esc(c.label)}<span class="chip-n">${String(n).padStart(2,'0')}</span></button>`;
+            }).join('');
+            $('filter-row').querySelectorAll('.chip').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    activeCat = btn.dataset.cat;
+                    renderFilters();
+                    renderPosts();
+                });
+            });
+        }
+
+        /* ── 文章网格：默认精选 4 篇，展开才给全部 ── */
+        function visiblePosts() {
+            const q = query.trim().toLowerCase();
+            const picked = META.picked || [];
+            return POSTS.filter(p => {
+                if (!showAll && !picked.includes(p.slug)) return false;   // 首屏做减法
+                if (activeCat !== 'all' && p.category !== activeCat) return false;
+                if (!q) return true;
+                return [p.title, p.subtitle, p.excerpt, ...(p.tags || [])].join(' ').toLowerCase().includes(q);
+            }).sort((a, b) => sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+        }
+
+        /* ── 手绘封面：6 套基础图案 + 按 slug 派生的镜像 / 旋转 / 点缀，保证每篇都不同 ── */
+        const INK = '#1B1830', PAPER = '#FFFDF8', GOLD = '#FFD84D';
+        const COVER_BASE = [
+            // 0 · 涂鸦星球
+            `<circle cx="148" cy="74" r="40" fill="${PAPER}" stroke="${INK}" stroke-width="4"/>
+             <path d="M110 74 q38 -12 76 0" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
+             <ellipse cx="148" cy="74" rx="80" ry="23" fill="none" stroke="${INK}" stroke-width="4" transform="rotate(-16 148 74)"/>
+             <path d="M26 128 q22 -16 44 0 t44 0 t44 0" fill="none" stroke="${GOLD}" stroke-width="6" stroke-linecap="round"/>`,
+            // 1 · 笔刷与波浪
+            `<path d="M58 110 L194 38 l24 12 -136 72 z" fill="${PAPER}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+             <path d="M58 110 q-16 8 -22 24 q24 -2 38 -14" fill="${PAPER}" stroke="${INK}" stroke-width="4"/>
+             <path d="M204 104 q22 -24 44 0 t44 0" fill="none" stroke="${PAPER}" stroke-width="5" stroke-linecap="round"/>
+             <path d="M38 44 q16 -14 32 0" fill="none" stroke="${GOLD}" stroke-width="5" stroke-linecap="round"/>`,
+            // 2 · 星星群与放射线
+            `<path d="M120 28 l12 26 28 4 -20 20 5 28 -25 -13 -25 13 5 -28 -20 -20 28 -4z" fill="${PAPER}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+             <path d="M40 118 l30 -10 M52 134 l30 -18 M232 112 l28 12" fill="none" stroke="${PAPER}" stroke-width="5" stroke-linecap="round"/>
+             <circle cx="228" cy="48" r="9" fill="${GOLD}" stroke="${INK}" stroke-width="3"/>`,
+            // 3 · 云朵与雨点
+            `<path d="M68 96 q-22 0 -22 -20 q0 -20 22 -20 q6 -22 30 -22 q22 0 28 20 q24 -2 24 20 q0 22 -24 22 z" fill="${PAPER}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+             <path d="M88 112 l-8 18 M124 112 l-8 18 M160 112 l-8 18 M196 112 l-8 18" fill="none" stroke="${PAPER}" stroke-width="5" stroke-linecap="round"/>
+             <path d="M240 34 l-10 24 h16 l-12 26" fill="none" stroke="${GOLD}" stroke-width="5" stroke-linejoin="round"/>`,
+            // 4 · 手绘立方体
+            `<path d="M96 42 l48 -16 48 16 -48 16 z" fill="${PAPER}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+             <path d="M96 42 v56 l48 16 v-56 M192 42 v56 l-48 16" fill="none" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+             <path d="M36 122 q30 -22 60 0 t60 0" fill="none" stroke="${PAPER}" stroke-width="5" stroke-linecap="round"/>`,
+            // 5 · 箭头与圈圈
+            `<path d="M44 108 C90 38 162 38 214 96" fill="none" stroke="${PAPER}" stroke-width="6" stroke-linecap="round"/>
+             <path d="M214 96 l-24 -4 M214 96 l-6 -24" fill="none" stroke="${PAPER}" stroke-width="6" stroke-linecap="round"/>
+             <circle cx="68" cy="50" r="14" fill="${GOLD}" stroke="${INK}" stroke-width="4"/>
+             <path d="M240 36 q18 12 0 24 q-18 12 0 24" fill="none" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>`
+        ];
+        function coverFor(p, i) {
+            const seed = [...(p.slug || '')].reduce((a, ch) => a + ch.charCodeAt(0), 0);
+            const mirror = seed % 2 ? 'translate(300 0) scale(-1 1)' : '';
+            const tilt = (seed % 5) - 2;
+            const sx = 34 + (seed * 7) % 232;
+            const sy = 20 + (seed * 11) % 100;
+            const dot = [GOLD, PAPER, '#FF5D8F'][seed % 3];
+            return `<g transform="${mirror} rotate(${tilt} 150 75)">${COVER_BASE[i % COVER_BASE.length]}</g>
+                <path d="M${sx} ${sy} l5 11 11 5 -11 5 -5 11 -5-11 -11-5 11-5z"
+                      fill="${dot}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+                <path d="M${(sx + 40) % 250} ${(sy + 26) % 118} q14 -12 28 0"
+                      fill="none" stroke="${PAPER}" stroke-width="4" stroke-linecap="round"/>`;
+        }
+
+        function renderPosts() {
+            const list = visiblePosts();
+            const tilts = [-1.4, 1.3, -0.9, 1.6, -1.1, 0.8];   // 贴纸式不对称，拒绝整齐
+            $('post-grid').innerHTML = list.map((p, i) => {
+                const c = catOf(p);
+                return `<article class="post-card" data-slug="${esc(p.slug)}"
+                    style="--c:${c.color};--tilt:${tilts[i % tilts.length]}deg;--delay:${(i * 0.09).toFixed(2)}s"
+                    tabindex="0" role="link" aria-label="阅读：${esc(p.title)}">
+                    <div class="card-art">
+                        <svg class="cover-art" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${coverFor(p, i)}</svg>
+                        <span class="card-art-num">${String(i+1).padStart(2,'0')}</span>
+                        <span class="card-tag">${esc(c.en)}</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-meta"><span class="cat">${esc(c.label)}</span><span>${esc(p.date)}</span><span>${p.readTime} MIN</span></div>
+                        <h3 class="card-title">${esc(p.title)}</h3>
+                        <p class="card-excerpt">${esc(p.excerpt)}</p>
+                        <div class="card-foot">
+                            <div class="card-tags">${(p.tags || []).slice(0,2).map(t => `<span>${esc(t)}</span>`).join('')}</div>
+                            <span class="card-read">READ ↗</span>
+                        </div>
+                    </div>
+                </article>`;
+            }).join('');
+            $('post-grid').querySelectorAll('.post-card').forEach(el => {
+                const open = () => {
+                    el.classList.add('is-poked');                 // 果冻反馈后再跳文章
+                    setTimeout(() => el.classList.remove('is-poked'), 520);
+                    setTimeout(() => { location.hash = '#post/' + encodeURIComponent(el.dataset.slug); }, 180);
+                };
+                el.addEventListener('click', open);
+                el.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+                });
+            });
+            $('feed-count').textContent = showAll
+                ? `${String(list.length).padStart(2,'0')} / ${String(POSTS.length).padStart(2,'0')} POSTS`
+                : `精选 ${list.length} 篇 · 档案共 ${POSTS.length} 篇`;
+            $('empty-state').hidden = list.length > 0;
+            $('show-all-btn').textContent = showAll ? '收起，只看精选 ↑' : `展开全部 ${POSTS.length} 篇 ↗`;
+            $('feed-tools').hidden = !showAll;
+            $('filter-row').hidden = !showAll;
+        }
+
+        function renderLinks() {
+            $('about-links').innerHTML = META.links.map(l =>
+                `<a class="about-link" href="${esc(l.url)}" target="_blank" rel="noopener">
+                    <strong>${esc(l.label)}</strong><small>${esc(l.hint)}</small><span>↗</span>
+                </a>`).join('');
+        }
+
+        /* ── 文章阅读层 ── */
+        const reader = $('post-reader');
+
+        function openReader(slug) {
+            const p = POSTS.find(x => x.slug === slug);
+            if (!p) { location.hash = '#home'; return; }
+            const c = catOf(p);
+            const idx = POSTS.indexOf(p);
+            const prev = POSTS[idx - 1], next = POSTS[idx + 1];
+            $('reader-crumb').textContent = `${c.label} / ${p.date}`;
+            $('reader-body').innerHTML = `
+                <div class="reader-kicker" style="color:${c.color}">${esc(c.en)} — ARTNH FIELD NOTES</div>
+                <h1 class="reader-title">${esc(p.title)}</h1>
+                <p class="reader-sub">${esc(p.subtitle || '')}</p>
+                <div class="reader-meta">
+                    <span><b>${esc(p.date)}</b></span><span>${esc(c.label)}</span>
+                    <span>${p.readTime} MIN READ</span>
+                    <span>${(p.tags || []).map(t => '#' + esc(t)).join('&nbsp;&nbsp;')}</span>
+                </div>
+                <div class="reader-content">${p.content || ''}</div>`;
+            $('reader-nav').innerHTML = [
+                prev ? `<a class="rnav" href="#post/${encodeURIComponent(prev.slug)}"><small>← PREV 上一篇</small><strong>${esc(prev.title)}</strong></a>` : '<div></div>',
+                next ? `<a class="rnav next" href="#post/${encodeURIComponent(next.slug)}"><small>下一篇 NEXT →</small><strong>${esc(next.title)}</strong></a>` : '<div></div>'
+            ].join('');
+            reader.hidden = false;
+            reader.scrollTop = 0;
+            syncBodyLock();
+            updateProgress();
+        }
+
+        function closeReader() {
+            reader.hidden = true;
+            syncBodyLock();
+        }
+
+        function updateProgress() {
+            const max = reader.scrollHeight - reader.clientHeight;
+            $('reader-progress-bar').style.width = (max > 0 ? Math.min(100, reader.scrollTop / max * 100) : 0) + '%';
+        }
+        reader.addEventListener('scroll', updateProgress, { passive: true });
+
+        // ══════════════════════════════════════════════════
+        //  门扉状态（降级为彩蛋：默认隐藏，仅 Wander / #404 唤起）
+        // ══════════════════════════════════════════════════
+        const errorOverlay   = $('error-overlay');
+        const btnBackToEarth = $('btn-back-to-earth');
+        const btnWanderGate  = $('btn-wander-gate');
+
+        function syncBodyLock() {
+            const gateOn   = errorOverlay.classList.contains('active');
+            const readerOn = !reader.hidden;
+            document.body.style.overflow = (gateOn || readerOn) ? 'hidden' : '';
+        }
 
         // 复位卡片到初始正面状态
         function resetCard() {
@@ -1400,46 +2186,195 @@
             });
         }
 
-        function initOverlay() {
-            const hash = window.location.hash;
-            if (hash === '#home') {
-                errorOverlay.classList.remove('active');
-                errorOverlay.classList.add('hidden');
-            } else {
-                errorOverlay.classList.remove('hidden');
-                errorOverlay.classList.add('active');
-                resetCard();
-            }
+        function showGate() {
+            resetCard();
+            errorOverlay.classList.remove('hidden');
+            void errorOverlay.offsetWidth;   // 强制 reflow，保证淡入动画每次都能重播
+            errorOverlay.classList.add('active');
+            syncBodyLock();
         }
 
-        window.addEventListener('load', initOverlay);
-
-        // 点击左上角小板块 Wander 链接时，重新拉起 404 星空欢迎门
-        btnWanderGate.addEventListener('click', (e) => {
-            e.preventDefault();
-            resetCard(); // 唤起前强制重置为正面
-            errorOverlay.classList.remove('hidden');
-            void errorOverlay.offsetWidth;
-            errorOverlay.classList.add('active');
-        });
-
-        btnBackToEarth.addEventListener('click', (e) => {
-            e.preventDefault();
-            resetCard(); // 立即重置卡片状态，防止在淡出动画过程中因 mousemove 再次触发 3D 旋转
-            // 淡出遮罩层
+        function hideGate(instant) {
+            if (errorOverlay.classList.contains('hidden')) return;
             errorOverlay.classList.remove('active');
             setTimeout(() => {
                 if (!errorOverlay.classList.contains('active')) {
                     errorOverlay.classList.add('hidden');
-                    resetCard(); // 彻底隐藏后再次确保重置
+                    resetCard();
                 }
-            }, 600);
+                syncBodyLock();
+            }, instant ? 0 : 600);
+        }
 
-            // 如果有 hash，平滑清理 hash
-            if (window.location.hash) {
-                history.replaceState(null, null, ' ');
+        function clearGateHash() {
+            const h = location.hash;
+            if (h === '#404' || h === '#wander') {
+                try { history.replaceState(null, '', location.pathname + location.search); }
+                catch (err) { location.hash = '#home'; }   // file:// 下 replaceState 可能受限
+            }
+        }
+
+        // 三态路由：博客 / 文章详情 / 门扉彩蛋
+        function route() {
+            const hash = location.hash || '';
+            if (hash === '#404' || hash === '#wander') {
+                closeReader();
+                renderFilters();          // 保底：门扉背后也渲染完整博客，关闭后不会空白
+                renderPosts();
+                showGate();
+                return;
+            }
+            hideGate(true);
+            if (hash.startsWith('#post/')) {
+                openReader(decodeURIComponent(hash.slice(6)));
+            } else {
+                closeReader();
+                if (hash.startsWith('#category/')) {
+                    const c = hash.slice(10);
+                    if (catById[c]) activeCat = c;
+                    showAll = true;              // 直接点栏目 = 要看这一类的全部
+                } else if (hash === '' || hash === '#home' || hash === '#all') {
+                    activeCat = 'all';
+                    showAll = false;
+                }
+                renderFilters();
+                renderPosts();
+                if (hash === '#about') {
+                    setTimeout(() => $('about').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+                }
+            }
+            document.querySelectorAll('.site-nav a').forEach(a => {
+                a.classList.toggle('is-current', a.getAttribute('href') === (hash || '#home'));
+            });
+        }
+
+        /* ── 交互绑定 ── */
+
+        // 回到顶部：button + 平滑滚动，不改 hash（否则会把已展开的档案收起）
+        $('to-top').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 全局鼠标点击：彩色星点迸发 + 扩散圆环
+        (() => {
+            const layer = $('click-layer');
+            const palette = ['#3B4EFF', '#FFD84D', '#FF5D8F', '#2FD6A6', '#8B5CF6', '#FF9F1C'];
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+            const spawn = (x, y) => {
+                if (reduced.matches) return;
+                const ring = document.createElement('span');
+                ring.className = 'click-ring';
+                ring.style.left = x + 'px';
+                ring.style.top = y + 'px';
+                layer.appendChild(ring);
+                setTimeout(() => ring.remove(), 620);
+                for (let i = 0; i < 6; i++) {
+                    const s = document.createElement('span');
+                    s.className = 'click-spark';
+                    s.style.left = x + 'px';
+                    s.style.top = y + 'px';
+                    s.style.setProperty('--sc', palette[i]);
+                    s.style.setProperty('--ang', (i * 60 + Math.random() * 22) + 'deg');
+                    s.style.setProperty('--dist', (30 + Math.random() * 30).toFixed(0) + 'px');
+                    s.style.setProperty('--size', (7 + Math.random() * 7).toFixed(0) + 'px');
+                    layer.appendChild(s);
+                    setTimeout(() => s.remove(), 700);
+                }
+
+                // 动态手绘样条线：三条随机贝塞尔，用 dash 动画「画」出来再淡出
+                const NS = 'http://www.w3.org/2000/svg';
+                const svg = document.createElementNS(NS, 'svg');
+                svg.setAttribute('class', 'click-scribble');
+                svg.setAttribute('viewBox', '0 0 160 160');
+                svg.style.left = (x - 80) + 'px';
+                svg.style.top = (y - 80) + 'px';
+                for (let k = 0; k < 3; k++) {
+                    const path = document.createElementNS(NS, 'path');
+                    const a = k * 2.1 + Math.random() * .8;
+                    const r = 46 + Math.random() * 24;
+                    const ex = 80 + Math.cos(a) * r, ey = 80 + Math.sin(a) * r;
+                    const c1x = 80 + Math.cos(a - .9) * (r * .9), c1y = 80 + Math.sin(a - .9) * (r * .9);
+                    const c2x = 80 + Math.cos(a + .8) * (r * .55), c2y = 80 + Math.sin(a + .8) * (r * .55);
+                    path.setAttribute('d', `M 80 80 C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${ex.toFixed(1)} ${ey.toFixed(1)}`);
+                    path.setAttribute('stroke', palette[(k + 2) % palette.length]);
+                    path.setAttribute('stroke-width', (4 + Math.random() * 2).toFixed(1));
+                    path.setAttribute('fill', 'none');
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('pathLength', '100');
+                    path.style.animationDelay = (k * .06) + 's';
+                    svg.appendChild(path);
+                }
+                layer.appendChild(svg);
+                setTimeout(() => svg.remove(), 900);
+            };
+            document.addEventListener('pointerdown', (e) => spawn(e.clientX, e.clientY), { passive: true });
+        })();
+
+        // 轻量视差：Hero 星球与涂鸦层随鼠标反向漂移（passive，不触发布局）
+        (() => {
+            const stageOrb = document.querySelector('.stage-orb');
+            const field = document.querySelector('.doodle-field');
+            if (!stageOrb || !field) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            window.addEventListener('pointermove', (e) => {
+                const x = (e.clientX / window.innerWidth - .5) * 2;
+                const y = (e.clientY / window.innerHeight - .5) * 2;
+                stageOrb.style.transform = `translate(${(x * 13).toFixed(1)}px, ${(y * 13).toFixed(1)}px)`;
+                field.style.transform = `translate(${(x * -9).toFixed(1)}px, ${(y * -9).toFixed(1)}px)`;
+            }, { passive: true });
+        })();
+
+        $('show-all-btn').addEventListener('click', () => {
+            showAll = !showAll;
+            if (!showAll) { activeCat = 'all'; query = ''; $('post-search').value = ''; }
+            renderFilters();
+            renderPosts();
+            if (showAll) $('feed').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        $('hero-about').addEventListener('click', () => { location.hash = '#about'; });
+        $('post-search').addEventListener('input', e => { query = e.target.value; renderPosts(); });
+        $('sort-btn').addEventListener('click', e => {
+            sortDesc = !sortDesc;
+            e.currentTarget.textContent = sortDesc ? '最新 ▾' : '最早 ▾';
+            renderPosts();
+        });
+        $('empty-reset').addEventListener('click', () => {
+            activeCat = 'all'; query = ''; $('post-search').value = '';
+            renderFilters(); renderPosts();
+        });
+        $('reader-back').addEventListener('click', () => { location.hash = '#home'; });
+        $('reader-gate').addEventListener('click', showGate);
+
+        btnWanderGate.addEventListener('click', (e) => {
+            e.preventDefault();
+            showGate();          // 不改 hash：从文章页唤起时，关闭后仍回到原文
+        });
+
+        btnBackToEarth.addEventListener('click', (e) => {
+            e.preventDefault();
+            resetCard();
+            errorOverlay.classList.remove('active');
+            clearGateHash();
+            setTimeout(() => {
+                if (!errorOverlay.classList.contains('active')) {
+                    errorOverlay.classList.add('hidden');
+                    resetCard();
+                }
+                syncBodyLock();
+            }, 600);
+            // 从服务器死链 (#404) 回来时，恢复成干净的博客首页
+            if (!location.hash.startsWith('#post/')) {
+                activeCat = 'all'; query = ''; $('post-search').value = '';
+                renderFilters(); renderPosts();
             }
         });
+
+        /* ── 启动 ── */
+        initReveal();
+        renderLinks();
+        route();                                   // 立即渲染，不依赖 load 事件
+        window.addEventListener('hashchange', route);
     </script>
 </body>
 </html>

@@ -25,19 +25,23 @@
 
 ## 🎬 交互视频与实测效果
 
+> 📌 **素材归档说明（2026-11-15）**：下列 4 份实测素材原存于旧环境
+> `C:/Users/AAA/.gemini/antigravity-ide/brain/34bb0ab1-.../`，未随项目迁移，本机已不存在。
+> 链接已改为项目内相对路径 `Markdown_Notes/assets/`；把原文件按**同名**放入该目录即可恢复预览。
+
 ### 📹 实测操作视频
-![星空门扉与流星背景测试视频](file:///C:/Users/AAA/.gemini/antigravity-ide/brain/34bb0ab1-cb90-47d7-87af-19935b22bcfb/verify_wander_corner_local_1780829228881.webp)
+![星空门扉与流星背景测试视频](assets/verify_wander_corner_local_1780829228881.webp)
 
 ---
 
 ### 🖼️ 网页状态精选卡片
 
 ````carousel
-![状态 1 - 页面初始加载 404 门扉](file:///C:/Users/AAA/.gemini/antigravity-ide/brain/34bb0ab1-cb90-47d7-87af-19935b22bcfb/initial_load_overlay_1780829240397.png)
+![状态 1 - 页面初始加载 404 门扉](assets/initial_load_overlay_1780829240397.png)
 <!-- slide -->
-![状态 2 - 淡出遮罩显现主站（左上角出现Wander按钮）](file:///C:/Users/AAA/.gemini/antigravity-ide/brain/34bb0ab1-cb90-47d7-87af-19935b22bcfb/homepage_main_1780829264942.png)
+![状态 2 - 淡出遮罩显现主站（左上角出现Wander按钮）](assets/homepage_main_1780829264942.png)
 <!-- slide -->
-![状态 3 - 星空背景粒子 density 增大并增加流星动态](file:///C:/Users/AAA/.gemini/antigravity-ide/brain/34bb0ab1-cb90-47d7-87af-19935b22bcfb/final_homepage_1780829286557.png)
+![状态 3 - 星空背景粒子 density 增大并增加流星动态](assets/final_homepage_1780829286557.png)
 ````
 
 ---
