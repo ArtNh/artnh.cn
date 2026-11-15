@@ -1,0 +1,161 @@
+# 🌌 ARTNH 个人主页 · 亮色手绘撞色大版本重构报告
+
+---
+
+本报告记录 2026-11-15 ~ 11-16 从「极简导航页 + 深空 404 门扉」重构为
+「个人博客主网 · 亮色手绘撞色」的完整过程：六轮迭代、案例研究、技术决策、
+校验结果与远程仓库覆盖。运维命令、回滚流程与常见坑见仓库根目录 `PUSH_GUIDE.md`。
+
+---
+
+## 💎 一、空间设计级美学改良
+
+### 1. 从「门扉」到「主网」
+
+* 旧版首屏**强制**全屏 404 翻转卡片，访客必须点「返回地球」才能看到只有三行外链的导航页。
+* 新版打开即达博客首页；门扉降级为右上角 `Wander` 入口与 `#404` 死链彩蛋，
+  并在亮色主题下改用 92% 暗底，形成「暗色异空间」的戏剧反差。
+* 首屏做减法：砍掉统计条、标签带与默认筛选栏，只留一个大标题、一句话、两个按钮和一个插画主角。
+
+### 2. 方向确立：先研究，再动刀
+
+用户第三轮明确指出旧版「暗调、全是直角矩形、把所有东西全拿出来缺少创意」。
+先检索真实成功个人网站并拆解，再形成 **Comic Pop（漫画跨页）** 方向：
+
+| 案例 | 提炼到的手法 |
+|---|---|
+| Jack McDade（DevDojo 完整 token） | navy / cyan / yellow 三色系统、波浪 SVG 取代直线、手绘旁注、明确拒绝方框与对称 |
+| Karl Gonsalves（Refero） | `#ffe600` 满版 + azure + coral，平涂无渐变无阴影，插画即界面，no UI density |
+| StealThis.dev 插画式 Portfolio | 硬偏移阴影 `6px 7px 0`、贴纸倾斜卡、blob 形变、果冻点击、按钮按下位移 |
+| Antoniouve（OpenDesign） | `#FFC900` 满底 + 123px 巨标题 + `cubic-bezier(.19,1,.22,1)` 弹性 |
+| Jonas Mosesson（Step1） | 每个项目一个硬编码撞色背景、非均匀网格、自定义光标 |
+| Hedof / Rafael Varona（Wix） | 用克制的容器装很吵的内容、极简导航、循环动效 logo |
+| Muffin Group / htmlBurger | 60-30-10 配比、「2 色自信胜过 6 色怯」、full-bleed 色块分段、留白让颜色 pop |
+| Oono Taro（Wix 动画作品集） | 用静态色带平衡 motion，别让一堆元素抢注意力 |
+
+### 3. 亮色撞色体系
+
+* **60-30-10**：奶油纸 `#FFF8EC` 占 60%，电光蓝 `#3B4EFF` 占 30%，
+  亮黄 `#FFD84D` / 珊瑚粉 `#FF5D8F` / 薄荷 `#2FD6A6` / 紫 `#8B5CF6` / 橙 `#FF9F1C` 共 10%。
+* 墨黑紫 `#1B1830` 负责全部描边与正文；3px 粗描边 + `7px 8px 0` 硬偏移阴影 + 26px 圆角。
+* 满幅亮黄「关于」分镜格、墨黑页脚收尾，让颜色分段而不是均匀铺撒。
+
+### 4. 手绘化的边界（重要）
+
+手绘**只作用于图形、插画与容器边框**：四角各异的不规则圆角、粗细不均的描边 + 内侧第二笔、
+SVG `feTurbulence / feDisplacementMap` 笔触抖动、手绘波浪与贝塞尔涂鸦。
+**所有文字保持 Baloo 2 / Nunito** —— 第五轮曾误把 `ZCOOL KuaiLe` 套到标题、按钮与导航上，
+用户当即指出，已连字体请求一并撤回。
+
+---
+
+## 🎬 二、六轮迭代全记录
+
+### 第 1 轮 · 旧机器路径迁移（2026-11-15 22:17）
+
+旧环境 `d:\ZZZ` + `C:/Users/AAA` 已迁到 `D:/Administrator/Documents/artnh.cn-main`。
+`.vscode/launch.json` 改用 `${workspaceFolder}/index.html`；`implementation_plan.md` 死链改相对路径；
+历史归档加迁移注记；`walkthrough.md` 的 4 份实测素材未随项目迁移，链接改到 `Markdown_Notes/assets/`。
+
+### 第 2 轮 · 重构为博客主网（22:21）
+
+确认方向：门扉降级为彩蛋 / 零构建静态 / 风格化。新增 `posts.js`（10 篇 / 6 栏目 / 3 外链），
+`index.html` 扩为博客主网（Header / Hero / 筛选搜索 / 卡片网格 / 关于 / 阅读层 / 三态 hash 路由）。
+数据层刻意用 `.js` 而非 `.json`，规避 `file://` 下 `fetch` 的 CORS 限制。
+
+### 第 3 轮 · 亮色动漫撞色（23:09）
+
+用户反馈暗调、直角、缺动效、色彩不对、信息全摊开。做完案例研究后新增 `theme.css`，
+以「后置覆盖」方式换皮，旧暗色样式一行未删（移除 `<link>` 即回退）。
+首屏只留 4 篇精选，点「展开全部」才给搜索 / 筛选 / 排序与 10 篇。
+
+### 第 4 轮 · 动效、门扉换皮与点击迸发（23:45）
+
+CDP 诊断确认 6 个动画全在 `running`，问题只是周期太长；缩短周期并放大振幅。
+门扉从暗色宇宙改为亮色漫画风，停用 Canvas 星尘循环与全屏 `blur(25px)` 根治卡顿。
+四个涂鸦改四条独立轨迹；新增全局点击星点 + 圆环；修复「回到顶部」按钮。
+
+### 第 5 轮 · 手绘涂鸦版（11-16 00:14）
+
+加入中文手写字体（后撤回）、不规则描边、SVG 笔触抖动、流动手绘虚线、满幅动态波纹、
+6 套基础图案 × slug 派生变体的独立封面、点击贝塞尔样条线。
+随后用户纠正「手绘只应用于图形」，撤回全部文字字体。
+
+### 第 6 轮 · 图标与远程仓库（00:38 ~ 01:16）
+
+`favicon.svg` 换成亮黄手绘贴纸标（亮黄底 + 电光蓝 A + 粉星 + 薄荷点），根元素改明确 64×64。
+补齐 `README.md` / `PUSH_GUIDE.md` / `.gitignore` / `.gitattributes`，初始化 git 仓库，
+备份远程旧版 9 个文件后完成覆盖推送，并设置仓库描述。
+
+---
+
+## 🧩 三、关键技术决策
+
+| 决策 | 原因 | 回退方式 |
+|---|---|---|
+| `posts.js` 用全局变量而非 `posts.json` | `file://` 下 `fetch` 本地 JSON 被 CORS 拦 | 部署到 HTTP 后可改回 JSON |
+| `theme.css` 后置覆盖内联样式 | 保留暗色底稿，主题可一键切换 | 删除 `<link rel="stylesheet" href="theme.css?v=1">` |
+| 三态 hash 路由（博客 / 阅读层 / 门扉） | 零构建下不生成多份 HTML | — |
+| 亮色主题停用 Canvas `animate()` | 180 粒子 + 每帧径向渐变是卡顿主因，且视觉仅 9% 透明度 | 移除 theme.css 的 `<link>` 自动恢复 |
+| SVG 抖动滤镜只给静态图形 | 动画元素加 `feTurbulence` 会每帧重算 | — |
+| 卡片入场不用 `from{opacity:0}` + `backwards` | 动画时间线未推进时整卡隐身 | — |
+| `popIn` 用 `backwards` 而非 `forwards` | 动画结束后 transform 交还 CSS，hover 不被锁 | — |
+| 覆盖推送用 `--force-with-lease` / API lease | 避免抹掉他人期间的新提交 | 备份目录 + 旧 SHA |
+
+---
+
+## 🔧 四、校验与测试结果
+
+- **[x]** CDP 真实 390px 视口：`inner=390 / scrollW=390 / OVERFLOW=[]`，零横向溢出
+- **[x]** 桌面 1440 与 1000 视口 `scrollW === innerWidth`，波浪宽度等于视口宽
+- **[x]** 动效开启下 10 组动画 `running`（`orbTrack / orbBreath / orbSpin / orbPulse / orbStar / orbDot / scribbleFlow / scribbleBob`）
+- **[x]** 展开全部：`covers=10 / uniqueCovers=10`，10 张手绘封面无一重样
+- **[x]** 点击实测 `sparks=6 / rings=1 / scribbles=1 / paths=3`
+- **[x]** 「回到顶部」`scrollY 700 → 0` 且 hash 不变
+- **[x]** 门扉 `lightThemeOn=true / overlayBlur=none`，背景为亮色纸底
+- **[x]** 所有文字元素 computed font 首位均为 `Baloo 2`，无手写体残留
+- **[x]** `file://` 双击渲染 4 张精选卡 + 点击层 + 回到顶部按钮
+- **[x]** favicon 16 / 32 / 64 / 160px 浅底与深底预览正常
+- **[x]** 远程 14 文件与本地逐字节一致，tree SHA 同为 `f1249453545abefdd262fea1da5e11033b8aece1`
+- **[x]** `.workbuddy/` 未推送、远程 `.vscode/launch.json` 已移除
+- **[x]** Vercel 已基于 `436dcff` 部署到 Production
+
+---
+
+## 📅 五、历史提交记录（增量恢复）
+
+* **[2026-11-15 22:17:00]** 【.vscode/launch.json, Markdown_Notes/*】旧机器路径迁移映射与归档注记
+* **[2026-11-15 22:21:00]** 【index.html, posts.js, Markdown_Notes/】重构为个人博客主网，门扉降级为彩蛋
+* **[2026-11-15 23:09:00]** 【theme.css, index.html, posts.js】案例研究后改为亮色动漫撞色 Comic Pop 方向
+* **[2026-11-15 23:45:00]** 【index.html, theme.css】动效可见化、门扉亮色换皮与性能根治、点击迸发
+* **[2026-11-16 00:14:00]** 【index.html, theme.css】手绘涂鸦版：满幅动态波纹、独立封面、贝塞尔样条线
+* **[2026-11-16 00:31:00]** 【theme.css, index.html】撤回文字手写字体，恢复全部文字样式
+* **[2026-11-16 00:38:00]** 【favicon.svg, index.html】更换亮黄手绘贴纸标并 bump `?v=2`
+* **[2026-11-16 00:53:00]** 【README.md, PUSH_GUIDE.md, .gitignore, .gitattributes】项目介绍与推送说明
+* **[2026-11-16 01:05:52]** 【本地仓库】`3cf7e17` 首次提交：14 文件 / 4114 行
+* **[2026-11-16 01:16:22]** 【远程仓库】`436dcff` 经 Git Data API 完整覆盖 `main`
+* **[2026-11-16 01:27:02]** 【PUSH_GUIDE.md, Markdown_Notes/】补充大版本详细变更档案与归档手记
+
+---
+
+## 📦 六、远程仓库覆盖
+
+| 项 | 值 |
+|---|---|
+| 仓库 | `ArtNh/artnh.cn`，公开，默认分支 `main` |
+| 覆盖前 HEAD | `99d8dfecd6ae0cd4b56c45f76bf13952d986382f`（2026-06-11） |
+| 覆盖后 HEAD | `436dcffb453a213b5c1c15d63e8f92376e5301ae` |
+| 文件 | 9 → 14（后续补档为 15）；逐字节一致 |
+| 策略 | lease 校验 + 新 commit 以旧 HEAD 为 parent（fast-forward，非无条件 force） |
+| 通道 | `github.com:443` 大 POST 被代理掐断，改走 `api.github.com` Git Data API 分包 |
+| 备份 | 项目外 `WorkBuddySpace/artnh.cn-remote-backup-20260611-99d8dfe/`（9 文件 + `_BACKUP_INFO.json`） |
+
+---
+
+## ⚠️ 七、已知边界与后续
+
+* 本地 `main` 曾因代理 `fetch` 502 未同步到远程 commit，内容与远程一致但 commit 分叉；
+  网络恢复后 `git fetch origin main && git reset --soft origin/main` 即可对齐。
+* `walkthrough.md` 引用的 4 份实测截图 / 视频未随项目迁移，按同名放入 `Markdown_Notes/assets/` 可恢复预览。
+* 手写字体、`Markdown_Notes` 旧路径等历史资产均保留为归档，不参与现行视觉体系。
+* Vercel 连接仓库自动部署；若需回退，可在 Deployments 面板对上一个部署执行 Instant Rollback。
