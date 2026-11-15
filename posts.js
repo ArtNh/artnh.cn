@@ -27,8 +27,9 @@ window.BLOG_META = {
         { id: 'lab',         label: '实验室', en: 'LAB',         color: '#FF9F1C' }
     ],
     /* 首页只露这几篇（做减法）；展开「全部档案」后才显示全部 */
-    /* 站点搭建案例置入精选首位，与旧 works 精选同为粉色，故替换一篇保持四色撞开 */
-    picked: ['site-build-case-study', 'hollow-knight-rig', 'npr-outline', 'env-design-to-game-art'],
+    /* 6 篇 = 2 列网格正好 3 行，铺满不留空洞；按 date 倒序展示 */
+    picked: ['site-build-case-study', 'hollow-knight-rig', 'npr-outline', 'env-design-to-game-art',
+             'npr-outline-methods', 'blender-ai-agent-mcp'],
     links: [
         { label: 'Portfolio',   hint: 'www.artnh.cn · 作品集',     url: 'https://www.artnh.cn' },
         { label: 'Art Gallery', hint: 'art.artnh.cn · 作品档案馆', url: 'https://art.artnh.cn/' },
@@ -408,6 +409,207 @@ window.BLOG_POSTS = [
 <blockquote>细节是用来佐证氛围的，不是用来制造氛围的。顺序反了就会越做越碎。</blockquote>
 <h2>结果</h2>
 <p>远看成立，近看仍然偏空。下一轮打算只补一处：在明暗交界附近加一道极窄的反弹光，看看能不能不动面数就把层次提起来。</p>`
+    },
+
+    {
+        slug: 'npr-outline-methods',
+        title: '三渲二描边效果 · 七种做法实录',
+        subtitle: '菲涅尔 / 实体化外扩 / 蜡笔画 / Freestyle / 边缘检测 / 几何节点 / 射线检测',
+        date: '2026-11-11',
+        category: 'tutorials',
+        tags: ['三渲二', '描边', 'Blender'],
+        readTime: 6,
+        featured: false,
+        excerpt: '从菲涅尔混合到 5.2 的光线透射节点，把七种描边方案的做法、坑点和效果截图一次收齐。原笔记以图为主，这里保留全部 9 张效果图。',
+        content: `<h2>第一种通过加入菲涅尔系数添加</h2>
+<p>直接在基础三渲二材质节点上添加菲涅尔系数与之混合<img src="assets/outline-01.png" alt="Pasted image 20261111204202.png" loading="lazy" /><img src="assets/outline-02.png" alt="Pasted image 20261111204222.png" loading="lazy" /><img src="assets/outline-03.png" alt="Pasted image 20261111204234.png" loading="lazy" /></p>
+<h2>第二种方式实体化创建厚度外扩</h2>
+<p>创建实体化修改器至于最上方，勾选翻转和添加材质偏移<img src="assets/outline-04.png" alt="Pasted image 20261111204458.png" loading="lazy" />新建槽二描边材质，设置中剔除摄像机和阴影<img src="assets/outline-05.png" alt="Pasted image 20261111204447.png" loading="lazy" /></p>
+<p><strong>第三种添加蜡笔画</strong></p>
+<p>蜡笔画修改器至于最上方，后续通过添加噪波、多个笔画、色调修改器调整描边。</p>
+<p>注意蜡笔画效果基于摄像机视角产生且添加后容易卡死 &#x27;&#x27;空洞骑士大黄蜂中使用的为集合蜡笔画效果&#x27;&#x27;</p>
+<h2>第四种Freestyle</h2>
+<p>在渲染中勾选Freestyle只会出现在渲染结果中！！视图层不会出现</p>
+<p><img src="assets/outline-06.png" alt="Pasted image 20261111204811.png" loading="lazy" /></p>
+<p>线条集确认描边显示范围</p>
+<h2>第五种边缘检测（属于后期合成的范畴）先要渲染好一个图像或动画</h2>
+<p>会检测出所有边缘<img src="assets/outline-07.png" alt="Pasted image 20261111204827.png" loading="lazy" /></p>
+<p><strong>第六种几何节点</strong></p>
+<p><img src="assets/outline-08.png" alt="Pasted image 20261111204846.png" loading="lazy" /></p>
+<p><img src="assets/outline-09.png" alt="Pasted image 20261111204853.png" loading="lazy" /></p>
+<h2>第七种射线检测版本5.2更新的光线透射节点</h2>
+<p>在cycles引擎中使用</p>
+<p>太复杂了不学了！！！！</p>`
+    },
+
+    {
+        slug: 'blender-ai-agent-mcp',
+        title: 'Blender AI Agent 自动建模搭建流程',
+        subtitle: 'Windows + Codex + MCP：从装 uv 到第一次自动建模',
+        date: '2026-10-11',
+        category: 'lab',
+        tags: ['MCP', 'AI Agent', 'Blender'],
+        readTime: 12,
+        featured: false,
+        excerpt: '自然语言驱动 AI 操作 Blender 的完整落地记录：整体架构、uv 与 mcp-for-blender 安装、Codex 里配 STDIO 服务、第一次自动建模测试。',
+        content: `<p>目标：通过自然语言驱动 AI Agent 自动操作 Blender，实现自动建模、修改、渲染。</p>
+<p>环境： - 操作系统：Windows - Blender：5.2.2 LTS - AI 客户端：Codex - MCP 服务：mcp-for-blender - 用户基础：无需编程基础</p>
+<h2>1. 整体架构</h2>
+<pre><code>用户自然语言指令
+        |
+        v
+Codex AI Agent
+        |
+        v
+MCP Server (mcp-for-blender)
+        |
+        v
+Blender MCP 插件
+        |
+        v
+Blender Python API
+        |
+        v
+3D模型 / 材质 / 灯光 / 渲染结果</code></pre>
+<p>工作逻辑：</p>
+<ul><li>用户描述需求。</li><li>AI Agent 理解任务。</li><li>AI 调用 Blender MCP 工具。</li><li>MCP 将命令传递给 Blender。</li><li>Blender 执行建模操作。</li></ul>
+<h2>2. 安装准备</h2>
+<h2>安装 Blender</h2>
+<p>下载并安装 Blender：</p>
+<ul><li>官方地址： https://www.blender.org/download/</li></ul>
+<p>建议版本：</p>
+<pre><code>Blender 5.2 LTS</code></pre>
+<h2>3. 安装 uv 环境</h2>
+<p>打开 Windows PowerShell：</p>
+<p>执行：</p>
+<pre><code>powershell -c &quot;irm https://astral.sh/uv/install.ps1 | iex&quot;</code></pre>
+<p>检查：</p>
+<pre><code>uvx --version</code></pre>
+<p>如果显示版本号，说明安装成功。</p>
+<h2>4. 安装 Blender MCP</h2>
+<p>执行：</p>
+<pre><code>uvx mcp-for-blender install-addon</code></pre>
+<p>作用：</p>
+<ul><li>安装 Blender MCP 插件</li><li>建立 AI 与 Blender 的通信能力</li></ul>
+<h2>5. 启动 MCP Server 测试</h2>
+<p>PowerShell 执行：</p>
+<pre><code>uvx mcp-for-blender</code></pre>
+<p>成功状态：</p>
+<pre><code>BlenderMCPServer - INFO
+Connected to Blender at localhost:9876
+
+Successfully connected to Blender on startup</code></pre>
+<p>说明：</p>
+<p>✅ MCP 服务启动成功 ✅ Blender 插件连接成功</p>
+<h2>6. Codex 添加 MCP 服务</h2>
+<p>进入：</p>
+<pre><code>Codex
+→ 设置
+→ MCP
+→ 添加自定义 MCP</code></pre>
+<p>填写：</p>
+<p><strong>名称</strong></p>
+<pre><code>blender</code></pre>
+<p><strong>类型</strong></p>
+<pre><code>STDIO</code></pre>
+<p><strong>启动命令</strong></p>
+<pre><code>uvx</code></pre>
+<p><strong>参数</strong></p>
+<pre><code>mcp-for-blender</code></pre>
+<p><strong>工作目录</strong></p>
+<p>例如：</p>
+<pre><code>C:\\Administrator\\Documents\\Codex</code></pre>
+<h2>7. MCP 配置完成后的状态</h2>
+<p>正确配置：</p>
+<pre><code>启动命令:
+uvx
+
+参数:
+mcp-for-blender</code></pre>
+<p>保存后：</p>
+<p>重新启动 Codex。</p>
+<h2>8. 第一次测试</h2>
+<p>不要直接创建复杂模型。</p>
+<p>先测试：</p>
+<pre><code>连接 Blender，读取当前场景信息。</code></pre>
+<p>正常返回：</p>
+<pre><code>Camera
+Light
+Cube</code></pre>
+<p>代表：</p>
+<pre><code>Codex
+ |
+MCP
+ |
+Blender</code></pre>
+<p>通信成功。</p>
+<h2>9. 第一次自动建模测试</h2>
+<p>发送：</p>
+<pre><code>请控制 Blender 创建一个红色立方体，
+放置在原点位置，并保存工程。</code></pre>
+<p>成功表现：</p>
+<ul><li>Blender 自动生成 Cube</li><li>Cube 材质变为红色</li><li>文件自动保存</li></ul>
+<h2>10. 创建复杂模型示例</h2>
+<p>示例任务：</p>
+<pre><code>请使用已连接的 Blender MCP 工具，直接在 Blender 中创建一个完整的低多边形小木屋场景，不要只向我解释步骤。
+ 要求：
+ 
+ 1. 先检查当前场景，并保留或清理默认物体，避免重复创建。
+ 2. 使用基础网格构建一栋小木屋：米黄色墙壁、深红色双坡屋顶、棕色木门、两扇蓝色玻璃窗。
+ 3. 添加绿色草地、几块石头和两棵简化的低多边形树。
+ 4. 给不同物体创建合适的材质，并为关键边缘添加适度倒角。
+ 5. 设置柔和的太阳光、世界背景和 3/4 视角的正交摄像机。
+ 6. 使用 Eevee 渲染器，输出一张 1280×720 的预览图。
+ 7. 执行建模后检查场景，确认物体、材质、摄像机和灯光存在；发现问题时修复并重新渲染。
+ 8. 将工程保存为用户文档目录下的 Blender_AI_Test/cottage.blend，并将预览图保存为同目录下的 cottage.png。
+ 9. 每完成一个阶段，简要报告执行结果；保存文件前确认目标路径和文件是否存在。     
+ 
+ 请直接调用工具执行，不要仅生成 Python 代码让我手动运行。</code></pre>
+<p>AI Agent 会自动：</p>
+<pre><code>需求分析
+ ↓
+生成建模步骤
+ ↓
+调用Blender工具
+ ↓
+创建模型
+ ↓
+检查结果
+ ↓
+修改优化
+ ↓
+保存文件</code></pre>
+<h2>11. 常见问题</h2>
+<h2>问题1：uvx 找不到</h2>
+<p>解决：</p>
+<p>重新打开 PowerShell。</p>
+<p>检查：</p>
+<pre><code>where uvx</code></pre>
+<h2>问题2：MCP连接失败</h2>
+<p>检查：</p>
+<ul><li>Blender 是否打开</li><li>MCP 插件是否启用</li><li>Codex 是否重新启动</li></ul>
+<h2>问题3：AI只生成代码，不操作 Blender</h2>
+<p>原因：</p>
+<p>MCP 工具没有加载。</p>
+<p>解决：</p>
+<p>检查 Codex MCP 状态。</p>
+<h2>12. 安全建议</h2>
+<p>AI 可以通过 Blender Python 执行操作。</p>
+<p>建议：</p>
+<ul><li>使用测试目录</li><li>重要工程提前备份</li><li>不允许未知脚本删除文件</li><li>不开放 MCP 服务到公网</li></ul>
+<h2>13. 当前完成状态</h2>
+<p>截至目前：</p>
+<p>✅ Blender 已安装 ✅ MCP 插件已安装 ✅ MCP Server 已启动 ✅ Blender 通信成功 ✅ Codex MCP 配置完成</p>
+<p>下一步：</p>
+<p>完成 Codex 与 Blender 的最终调用测试。</p>
+<p><strong>后续升级方向</strong></p>
+<p><strong>初级</strong></p>
+<p>文字 → Blender模型</p>
+<p><strong>中级</strong></p>
+<p>图片 → 3D模型</p>
+<p><strong>高级</strong></p>
+<p>AI Agent 自动：</p>
+<ul><li>建模</li><li>UV展开</li><li>材质制作</li><li>灯光设计</li><li>渲染</li><li>导出游戏资产</li></ul>`
     }
 
 ];

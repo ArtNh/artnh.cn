@@ -63,7 +63,7 @@ python -m http.server 8000
 | `featured` | 是否作为大卡（仅在无筛选时生效） |
 | `content` | 正文 HTML，支持 `h2 / p / ul / blockquote / code / pre` |
 
-`BLOG_META.picked` 决定首页默认露出的 4 篇，建议挑四个不同分类，撞色才明显。
+`BLOG_META.picked` 决定首页默认露出的 6 篇；为保持 2 列网格铺满，建议增删时维持偶数篇。
 手绘封面由 `coverFor()` 按 `slug` 派生，**不需要**为新文章单独画图。
 
 ## 五、提交前自检

@@ -577,6 +577,14 @@ html, body {
 .reader-content tr:last-child td { border-bottom: none; }
 .reader-content th:last-child, .reader-content td:last-child { border-right: none; }
 .reader-content tbody tr:nth-child(even) td { background: rgba(255,216,77,.09); }
+/* 文章配图：手绘描边贴纸感，长图不撑破阅读区 */
+.reader-content img {
+    display: block; max-width: 100%; height: auto;
+    margin: 1.5rem auto; border: 2px solid var(--ink);
+    border-radius: 14px; box-shadow: var(--shadow-sm);
+    background: var(--paper-2);
+}
+.reader-content .note-figure { margin: 0; }
 @media (max-width: 560px) {
     .reader-content table { font-size: .78rem; }
     .reader-content th, .reader-content td { padding: .5rem .55rem; }
