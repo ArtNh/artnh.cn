@@ -53,8 +53,11 @@
 | `404.html` | 服务器死链重定向到 `index.html#404` |
 | `1000104636.jpg` | 门扉彩蛋「带张星空走」的原图 |
 | `Markdown_Notes/` | 历次设计与排查归档 |
-| `README.md` | 本文件 |
-| `PUSH_GUIDE.md` | 完整推送 / 覆盖 / 回滚说明 |
+| `README.md` | 本文件 · 项目介绍 |
+| `PUSH_GUIDE.md` | 完整推送 / 覆盖 / 回滚说明与变更台账 |
+| `CODE_OF_CONDUCT.md` | 社区行为准则 |
+| `CONTRIBUTING.md` | 贡献指南（项目约定 / 加文章 / 命名规则 / PR 流程） |
+| `LICENSE` | MIT 代码许可（内容版权说明见文末） |
 
 ## 🚀 快速开始
 
@@ -96,6 +99,19 @@ python -m http.server 8000
 
 视觉方向来自对真实个人站点的拆解：Jack McDade（三色系统与波浪分隔）、Karl Gonsalves（平涂撞色与 no UI density）、StealThis.dev 插画式 Portfolio（硬阴影与贴纸卡配方）、Antoniouve（巨标题与弹性动效）、Jonas Mosesson（每项一色）、Hedof / Rafael Varona（克制容器装吵内容），以及 60-30-10 配色与留白原则。
 
+## 📄 社区规范与许可
+
+| 文件 | 用途 |
+|---|---|
+| `README.md` | 项目介绍（本文件） |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | 行为准则 · 让讨论保持友好 |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | 贡献指南 · 项目约定、加文章、命名规则、PR 流程 |
+| [`LICENSE`](LICENSE) | 代码按 MIT 授权 |
+
+**代码开源，内容保留版权**：`index.html` / `theme.css` / `posts.js` 等代码按 MIT 授权；站内的**文章文字、手绘插画、封面图案与图片素材**不在 MIT 范围内，版权归作者所有，未经许可请勿转载或商用。`1000104636.jpg` 为 NASA 生日星空图，用于门扉彩蛋「带张星空走」。
+
+动手改站点前请先读一遍 `CONTRIBUTING.md` 的「项目约定」—— 尤其是「手绘只作用于图形与插画、不改文字字体」和「不引入框架与构建工具」。
+
 ## 🔗 链接
 
 - 仓库：https://github.com/ArtNh/artnh.cn
@@ -105,4 +121,4 @@ python -m http.server 8000
 
 ---
 
-© 2026 ARTNH · CUI JIN-LIN
+© 2026 ARTNH · CUI JIN-LIN · 代码 MIT / 内容版权保留
