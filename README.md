@@ -116,7 +116,7 @@ python -m http.server 8000
 
 - 仓库：https://github.com/ArtNh/artnh.cn
 - 作品集：https://www.artnh.cn
-- 作品档案馆：https://art.artnh.cn/
+- 作品档案馆：https://art.artnh.cn
 - GitHub：https://github.com/ArtNh
 
 ---
