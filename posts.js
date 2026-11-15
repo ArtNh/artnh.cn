@@ -425,7 +425,7 @@ window.BLOG_POSTS = [
 <p>直接在基础三渲二材质节点上添加菲涅尔系数与之混合<img src="assets/outline-01.png" alt="Pasted image 20261111204202.png" loading="lazy" /><img src="assets/outline-02.png" alt="Pasted image 20261111204222.png" loading="lazy" /><img src="assets/outline-03.png" alt="Pasted image 20261111204234.png" loading="lazy" /></p>
 <h2>第二种方式实体化创建厚度外扩</h2>
 <p>创建实体化修改器至于最上方，勾选翻转和添加材质偏移<img src="assets/outline-04.png" alt="Pasted image 20261111204458.png" loading="lazy" />新建槽二描边材质，设置中剔除摄像机和阴影<img src="assets/outline-05.png" alt="Pasted image 20261111204447.png" loading="lazy" /></p>
-<p><strong>第三种添加蜡笔画</strong></p>
+<h2>第三种添加蜡笔画</h2>
 <p>蜡笔画修改器至于最上方，后续通过添加噪波、多个笔画、色调修改器调整描边。</p>
 <p>注意蜡笔画效果基于摄像机视角产生且添加后容易卡死 &#x27;&#x27;空洞骑士大黄蜂中使用的为集合蜡笔画效果&#x27;&#x27;</p>
 <h2>第四种Freestyle</h2>
@@ -434,7 +434,7 @@ window.BLOG_POSTS = [
 <p>线条集确认描边显示范围</p>
 <h2>第五种边缘检测（属于后期合成的范畴）先要渲染好一个图像或动画</h2>
 <p>会检测出所有边缘<img src="assets/outline-07.png" alt="Pasted image 20261111204827.png" loading="lazy" /></p>
-<p><strong>第六种几何节点</strong></p>
+<h2>第六种几何节点</h2>
 <p><img src="assets/outline-08.png" alt="Pasted image 20261111204846.png" loading="lazy" /></p>
 <p><img src="assets/outline-09.png" alt="Pasted image 20261111204853.png" loading="lazy" /></p>
 <h2>第七种射线检测版本5.2更新的光线透射节点</h2>
