@@ -1250,7 +1250,7 @@
     </style>
     <!-- 亮色动漫撞色主题：后置于内联样式，同名规则覆盖暗色 BLOG LAYER；
          移除这一行即可一键回退到上一版深空主题 -->
-    <link rel="stylesheet" href="theme.css?v=20261116" />
+    <link rel="stylesheet" href="theme.css?v=20261116c" />
 </head>
 <body>
 
@@ -1272,14 +1272,6 @@
 
     <!-- ══════════════ 博客主网 ══════════════ -->
     <div id="blog-app">
-
-        <!-- 漂浮涂鸦层：纯 CSS 动效，不参与交互 -->
-        <div class="doodle-field" aria-hidden="true">
-            <span class="doodle d1"></span>
-            <span class="doodle d2"></span>
-            <span class="doodle d3"></span>
-            <span class="doodle d4"></span>
-        </div>
 
         <header class="site-header">
             <a class="brand" href="#home" aria-label="回到博客首页">
@@ -1349,17 +1341,21 @@
                         <span class="stage-star s2">✦</span>
                     </div>
                 </div>
-                <svg class="wave-sep" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-                    <g class="wave-layer wave-back">
-                        <path class="wave-fill-alt" d="M0,72 C160,26 300,110 480,70 C660,30 820,108 1000,68 C1180,28 1320,102 1440,62 L1440,120 L0,120 Z" />
-                    </g>
-                    <g class="wave-layer wave-mid">
-                        <path class="wave-fill" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72 L1440,120 L0,120 Z" />
-                        <path class="wave-ink" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72" />
-                    </g>
-                    <path class="wave-dash" d="M0,102 C200,66 340,134 560,98 C780,62 940,130 1160,96 C1320,70 1390,112 1440,98" />
-                    <path class="wave-dash wave-dash-2" d="M0,44 C220,12 380,82 600,46 C820,10 980,78 1200,44 C1340,20 1400,56 1440,42" />
-                </svg>
+                <!-- 手绘分隔线：墨线主干 + 撞色虚线并行 + 中心星芒，宽度对齐正文 -->
+                <div class="hand-divider" aria-hidden="true">
+                    <svg viewBox="0 0 1120 96" preserveAspectRatio="none">
+                        <path class="hd-gold" d="M0 34 C120 20 210 52 340 38 C470 24 560 50 690 36 C820 22 910 52 1030 36 C1080 30 1110 34 1120 32" />
+                        <path class="hd-pink" d="M0 64 C130 50 220 80 350 66 C480 52 570 78 700 64 C830 50 920 80 1040 64 C1090 58 1115 62 1120 60" />
+                        <path class="hd-ink" d="M0 49 C110 33 205 69 335 51 C465 33 558 67 688 49 C818 31 912 67 1032 49 C1082 42 1110 47 1120 46" />
+                    </svg>
+                    <span class="hd-star">
+                        <svg viewBox="0 0 60 60">
+                            <path d="M30 4 l6 18 18 6 -18 6 -6 18 -6 -18 -18 -6 18 -6z"
+                                  fill="#FFD84D" stroke="#1B1830" stroke-width="3.5" stroke-linejoin="round" />
+                            <circle cx="30" cy="28" r="4" fill="#FF5D8F" stroke="#1B1830" stroke-width="2.5" />
+                        </svg>
+                    </span>
+                </div>
             </section>
 
             <!-- ── 文章档案：先露 4 篇精选，展开才给全部 ── -->
@@ -1391,22 +1387,12 @@
 
             <!-- ── 关于：满幅亮黄分镜格 ── -->
             <section class="about-strip" id="about">
-                <svg class="wave-sep" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-                    <g class="wave-layer wave-back">
-                        <path class="wave-fill-alt" d="M0,72 C160,26 300,110 480,70 C660,30 820,108 1000,68 C1180,28 1320,102 1440,62 L1440,120 L0,120 Z" />
-                    </g>
-                    <g class="wave-layer wave-mid">
-                        <path class="wave-fill" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72 L1440,120 L0,120 Z" />
-                        <path class="wave-ink" d="M0,80 C180,34 320,114 520,76 C720,38 880,112 1080,74 C1260,40 1360,96 1440,72" />
-                    </g>
-                    <path class="wave-dash" d="M0,102 C200,66 340,134 560,98 C780,62 940,130 1160,96 C1320,70 1390,112 1440,98" />
-                    <path class="wave-dash wave-dash-2" d="M0,44 C220,12 380,82 600,46 C820,10 980,78 1200,44 C1340,20 1400,56 1440,42" />
-                </svg>
                 <div class="about-inner">
                     <div class="about-left reveal">
                         <span class="section-kicker">03 / ABOUT</span>
                         <h2>关于我<span class="dot-accent">●</span></h2>
                         <p>崔金林 · 环境设计专业本科。现在主要做 Blender 风格化 NPR 建模与三渲二，顺手造一些自用工具。这里是不带滤镜的工作日志。</p>
+                        <p class="about-email">合作 / 交流 → <a href="mailto:ArtNh1@hotmail.com">ArtNh1@hotmail.com</a></p>
                     </div>
                     <div class="about-links reveal" id="about-links"></div>
                 </div>
@@ -1414,9 +1400,16 @@
         </main>
 
         <div class="blog-footer">
-            <span>© 2026 ARTNH.CN <i>·</i> CUI JIN-LIN</span>
-            <span>BUILD WITH STARDUST <i>·</i> NO FRAMEWORK, NO BUILD STEP</span>
-            <button class="to-top" id="to-top" type="button">回到顶部 ↑</button>
+            <div class="footer-top">
+                <strong>崔金林 <i>/</i> STUDIO ARTNH</strong>
+                <span>CREATIVE DEVELOPER · BLENDER NPR · SINCE 2026</span>
+            </div>
+            <div class="footer-wordmark" aria-hidden="true">ARTNH</div>
+            <div class="footer-bottom">
+                <span>© 2026 ARTNH.CN <i>·</i> CUI JIN-LIN</span>
+                <span>BUILD WITH STARDUST <i>·</i> NO FRAMEWORK, NO BUILD STEP</span>
+                <button class="to-top" id="to-top" type="button">回到顶部 ↑</button>
+            </div>
         </div>
     </div>
 
@@ -1521,7 +1514,7 @@
 
     <!-- 文章数据层：用 script 标签加载，双击 index.html（file://）也能跑；
          若改用 fetch + posts.json，本地协议会被 CORS 拦下 -->
-    <script src="posts.js?v=20261116b"></script>
+    <script src="posts.js?v=20261116c"></script>
 
     <!-- ── JavaScript：星尘渲染、博客渲染与无刷新单页路由 ── -->
     <script>
@@ -2114,10 +2107,12 @@
         }
 
         function renderLinks() {
-            $('about-links').innerHTML = META.links.map(l =>
-                `<a class="about-link" href="${esc(l.url)}" target="_blank" rel="noopener">
-                    <strong>${esc(l.label)}</strong><small>${esc(l.hint)}</small><span>↗</span>
-                </a>`).join('');
+            $('about-links').innerHTML = META.links.map(l => {
+                const isMail = l.url.startsWith('mailto:');
+                return `<a class="about-link" href="${esc(l.url)}"${isMail ? '' : ' target="_blank" rel="noopener"'}>
+                    <strong>${esc(l.label)}</strong><small>${esc(l.hint)}</small><span>${isMail ? '✉' : '↗'}</span>
+                </a>`;
+            }).join('');
         }
 
         /* ── 文章阅读层 ── */
@@ -2311,26 +2306,20 @@
             document.addEventListener('pointerdown', (e) => spawn(e.clientX, e.clientY), { passive: true });
         })();
 
-        // 轻量视差：Hero 星球与涂鸦层随鼠标反向漂移（passive，不触发布局）
+        // 轻量视差：Hero 星球随鼠标漂移（passive，不触发布局）
         (() => {
             const stageOrb = document.querySelector('.stage-orb');
-            const field = document.querySelector('.doodle-field');
-            if (!stageOrb || !field) return;
+            if (!stageOrb) return;
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
             window.addEventListener('pointermove', (e) => {
                 const x = (e.clientX / window.innerWidth - .5) * 2;
                 const y = (e.clientY / window.innerHeight - .5) * 2;
                 stageOrb.style.transform = `translate(${(x * 13).toFixed(1)}px, ${(y * 13).toFixed(1)}px)`;
-                field.style.transform = `translate(${(x * -9).toFixed(1)}px, ${(y * -9).toFixed(1)}px)`;
             }, { passive: true });
         })();
 
         $('show-all-btn').addEventListener('click', () => {
-            showAll = !showAll;
-            if (!showAll) { activeCat = 'all'; query = ''; $('post-search').value = ''; }
-            renderFilters();
-            renderPosts();
-            if (showAll) $('feed').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            location.href = 'archive.html';              // 全部档案改为独立全屏页
         });
         $('hero-about').addEventListener('click', () => { location.hash = '#about'; });
         $('post-search').addEventListener('input', e => { query = e.target.value; renderPosts(); });

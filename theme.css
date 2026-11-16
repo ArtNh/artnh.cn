@@ -460,10 +460,10 @@ html, body {
 /* ── 关于：满幅亮黄分镜格 ── */
 .about-strip {
     position: relative; z-index: 1; display: block;
+    width: 100vw; margin-left: calc(50% - 50vw);   /* 突破 main 的内边距，横向铺满 */
     background: var(--yellow); border-top: var(--line); border-bottom: var(--line);
-    padding: 0 0 5.5rem;
+    padding: 2.5rem 0 5.5rem;
 }
-.about-strip .wave-sep path { fill: var(--paper); }
 .about-inner {
     max-width: 1120px; margin: 0 auto;
     padding: 2.5rem clamp(1.2rem, 5vw, 4.5rem) 0;
@@ -475,6 +475,13 @@ html, body {
 }
 .about-left .dot-accent { color: var(--blue); }
 .about-left p { font-size: .98rem; line-height: 1.95; font-weight: 600; color: var(--ink); max-width: 38rem; }
+.about-left .about-email { margin-top: 1rem; font-family: var(--pop); font-size: .92rem; }
+.about-left .about-email a {
+    color: var(--ink); background: var(--pink); text-decoration: none;
+    border: 2px solid var(--ink); border-radius: 999px; padding: .15rem .7rem;
+    box-shadow: var(--shadow-sm); transition: transform .16s var(--ease-pop), box-shadow .16s var(--ease-pop);
+}
+.about-left .about-email a:hover { transform: translate(-2px,-2px); box-shadow: 6px 7px 0 var(--ink); }
 .about-links { background: var(--paper-2); border: var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: .6rem 1.4rem; transform: rotate(1.5deg); }
 .about-link {
     border-top: 2px dashed rgba(27,24,48,.2); padding: 1.05rem .2rem; color: var(--ink);
@@ -485,16 +492,56 @@ html, body {
 .about-link small { font-size: .68rem; font-weight: 700; color: var(--ink-soft); }
 .about-link span { color: var(--pink); font-size: 1.1rem; }
 
-/* ── 页脚 ── */
+/* ── 页脚：深色块 + 巨型空心描边签名 ── */
 .blog-footer {
     position: relative; z-index: 1;
+    display: block;                       /* 覆盖内联的 flex 横排 */
     background: var(--ink); color: var(--paper);
-    border-top: 0; padding: 2.2rem clamp(1.2rem, 5vw, 4.5rem);
+    border-top: 0; padding: 2.6rem clamp(1.2rem, 5vw, 4.5rem) 1.8rem;
     font-family: var(--pop); font-size: .7rem; font-weight: 700; letter-spacing: .1em;
+    overflow: hidden;
 }
-.blog-footer i { color: var(--yellow); }
+.blog-footer i { color: var(--yellow); font-style: normal; padding: 0 .25rem; }
 .blog-footer a { color: var(--yellow); }
 .blog-footer a:hover { color: var(--pink); }
+
+/* 顶部品牌行 */
+.footer-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+    padding-bottom: 1.6rem; border-bottom: 2px solid rgba(255,248,236,.18);
+}
+.footer-top strong {
+    font-family: var(--pop); font-weight: 800;
+    font-size: 1.05rem; letter-spacing: .04em; color: var(--paper);
+}
+.footer-top strong i { color: var(--pink); }
+.footer-top span {
+    font-family: var(--pop); font-size: .66rem; font-weight: 700;
+    letter-spacing: .16em; color: rgba(255,248,236,.5);
+}
+
+/* 巨型空心描边签名：参考图那种铺满的宽度与分量 */
+.footer-wordmark {
+    font-family: var(--pop); font-weight: 800;
+    font-size: clamp(5.5rem, 25vw, 26rem);
+    line-height: .92; letter-spacing: -.02em;
+    text-align: center; white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255,248,236,.42);
+    padding: 1.2rem 0 1.6rem;
+    user-select: none;
+    transition: -webkit-text-stroke-color .35s ease;
+}
+.footer-wordmark:hover { -webkit-text-stroke-color: var(--yellow); }
+
+/* 底部信息栏 */
+.footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; flex-wrap: wrap;
+    padding-top: 1.3rem; border-top: 2px solid rgba(255,248,236,.18);
+    font-size: .82rem; font-weight: 700; letter-spacing: .12em; color: rgba(255,248,236,.78);
+}
 
 /* ── 门扉彩蛋：亮色主站之上，用近乎不透明的暗底切入「异空间」 ──
    原来的 45% 黑蒙版是为暗色主站调的，亮色下会透出彩色底导致卡片发灰 */
@@ -586,6 +633,10 @@ html, body {
 }
 .reader-content .note-figure { margin: 0; }
 @media (max-width: 560px) {
+    .footer-top strong { font-size: .9rem; }
+    .footer-top span { font-size: .56rem; }
+    .footer-wordmark { -webkit-text-stroke-width: 1.5px; padding: 1rem 0 1.2rem; }
+    .footer-bottom { font-size: .68rem; gap: .6rem; }
     .reader-content table { font-size: .78rem; }
     .reader-content th, .reader-content td { padding: .5rem .55rem; }
     /* 长文阅读层：窄屏收紧顶部三控件，避免按钮文字折行 */
@@ -639,6 +690,7 @@ html, body {
 }
 @media (prefers-reduced-motion: reduce) {
     .doodle, .blob, .stage-ring, .stage-star, .pop-title .bang { animation: none !important; }
+    .hd-gold, .hd-pink, .hd-star { animation: none !important; }
     .post-card { animation: none !important; }
     .reveal { opacity: 1; transform: none; transition: none; }
     .btn, .post-card, .chip, .wander-chip { transition: none; }
@@ -866,10 +918,35 @@ html, body {
 @keyframes scribbleFlow { to { stroke-dashoffset: -52; } }
 @keyframes scribbleBob  { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
 
-/* ── ③ 满幅动态手绘波纹 ── */
+/* ── ③ 手绘分隔线：墨线主干 + 撞色虚线 + 中心星芒，宽度对齐正文 ── */
+.hand-divider {
+    display: block; position: relative;
+    width: min(1120px, calc(100vw - 4rem)); margin: 2.2rem auto;
+    height: 96px;
+}
+.hand-divider > svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hand-divider path { fill: none; stroke-linecap: round; }
+.hd-ink  { stroke: var(--ink); stroke-width: 4; }
+.hd-gold { stroke: var(--yellow); stroke-width: 3.5; stroke-dasharray: 16 14; animation: hdFlow 1.4s linear infinite; }
+.hd-pink { stroke: var(--pink); stroke-width: 3; stroke-dasharray: 10 16; animation: hdFlow 1.9s linear infinite reverse; }
+@keyframes hdFlow { to { stroke-dashoffset: -60; } }
+.hd-star {
+    position: absolute; left: 50%; top: 50%;
+    width: 52px; height: 52px; transform: translate(-50%, -50%) rotate(-8deg);
+    filter: drop-shadow(3px 4px 0 var(--ink));
+    animation: hdStar 3.2s ease-in-out infinite;
+}
+.hd-star svg { width: 100%; height: 100%; }
+@keyframes hdStar {
+    0%, 100% { transform: translate(-50%, -50%) rotate(-8deg) scale(1); }
+    50%      { transform: translate(-50%, -50%) rotate(8deg) scale(1.1); }
+}
+
+/* 旧波纹规则保留（可能他处引用）；现已无对应元素 */
 .wave-sep {
-    position: relative; left: 50%;
-    width: 100vw !important; margin-left: -50vw !important;
+    display: block;
+    width: min(1120px, calc(100vw - 4rem)) !important;
+    margin: 0 auto !important;
     height: 118px; overflow: visible;
 }
 .wave-layer { transform-box: view-box; transform-origin: 720px 60px; }

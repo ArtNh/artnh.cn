@@ -33,7 +33,8 @@ window.BLOG_META = {
     links: [
         { label: 'Portfolio',   hint: 'www.artnh.cn · 作品集',     url: 'https://www.artnh.cn' },
         { label: 'Art Gallery', hint: 'art.artnh.cn · 作品档案馆', url: 'https://art.artnh.cn/' },
-        { label: 'GitHub',      hint: 'github.com/ArtNh',          url: 'https://github.com/ArtNh' }
+        { label: 'GitHub',      hint: 'github.com/ArtNh',          url: 'https://github.com/ArtNh' },
+        { label: 'Email',       hint: 'ArtNh1@hotmail.com · 联系我', url: 'mailto:ArtNh1@hotmail.com' }
     ]
 };
 
