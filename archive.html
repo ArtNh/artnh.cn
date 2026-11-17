@@ -179,6 +179,19 @@
     const params = new URLSearchParams(location.search);
     let activeCat = params.get('cat') && CATS.some(c => c.id === params.get('cat')) ? params.get('cat') : 'all';
 
+    /* ── 地址栏规范（2026-11-18 铁律）────────────────────────
+       本页唯一合法形态：artnh.cn/archive（裸域名 + archive，无 .html 无查询串）
+       cat 状态只在页内内存里流转，不写 URL；任何带 ?cat= / .html 的入口
+       进门后立即 replaceState 归一。file:// 下降级为只归一文件名。 ── */
+    function normalizeArchiveUrl() {
+      try {
+        history.replaceState(null, '', location.pathname.replace(/archive\.html$/i, 'archive') + location.hash);
+      } catch (err) {
+        try { history.replaceState(null, '', 'archive.html' + location.hash); } catch (e2) {}
+      }
+    }
+    normalizeArchiveUrl();            // 落地即归一（包括从主页导航带来的 ?cat=xxx）
+
     function buildFilters() {
       const chips = CATS.some(c => c.id === 'all') ? CATS : [{ id:'all', label:'全部' }].concat(CATS);
       $('arc-filters').innerHTML = chips.map(c => {
@@ -200,7 +213,7 @@
 
       $('arc-grid').innerHTML = list.map((p, i) => {
         const c = catOf(p);
-        return `<a class="arc-card" href="index.html#post/${encodeURIComponent(p.slug)}"
+        return `<a class="arc-card" href="index.html?from=archive#post/${encodeURIComponent(p.slug)}"
             style="--c:${c.color};--tilt:${tilts[i % tilts.length]}deg">
           <div class="arc-art">
             <svg viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${coverFor(p, i)}</svg>

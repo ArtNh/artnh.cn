@@ -2242,9 +2242,10 @@
                 if (hash === '#about') {
                     setTimeout(() => $('about').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
                 }
-                // 地址栏净化：#home / #feed / #about / #all 都是「主页态」，落地后立即
-                // 把 URL 抹成裸域名（保留 #category/ 功能链）；#post/ 保留供刷新与分享。
-                if (['#home', '#feed', '#about', '#all'].includes(hash)) cleanHomeUrl();
+                // 地址栏规范（2026-11-18 起铁律）：主页一切状态（含裸落地 / #home / #feed /
+                // #about / 未知 hash）URL 一律归一成裸域名；#post/ 与 #category/ 是功能深链，
+                // 刷新与分享要靠它们，保留不洗。
+                if (!hash.startsWith('#category/')) cleanHomeUrl();
             }
             syncNavCurrent(hash || '#home');
         }
@@ -2387,11 +2388,23 @@
             activeCat = 'all'; query = ''; $('post-search').value = '';
             renderFilters(); renderPosts();
         });
+        // 「← 返回档案」：文章从哪来回哪去。只有从主页精选区打开的才回主页，
+        // 从档案独立页进来的回 archive.html（保持 ?cat= 语境）。
+        let openedFromArchive = false;      // 档案页跳转进来时由 URL 参数标记
+        (() => {
+            const params = new URLSearchParams(location.search);
+            if (params.get('from') === 'archive') openedFromArchive = true;
+        })();
         $('reader-back').addEventListener('click', () => {
-            closeReader();
-            syncBodyLock();
-            cleanHomeUrl();          // 关文章回主页：URL 归一成裸域名，不留 #post 尾巴
-            syncNavCurrent('#home');
+            if (openedFromArchive) {
+                location.href = 'archive.html';
+            } else {
+                closeReader();
+                syncBodyLock();
+                cleanHomeUrl();
+                syncNavCurrent('#home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
         $('reader-gate').addEventListener('click', showGate);
 
