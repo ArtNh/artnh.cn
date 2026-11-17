@@ -236,7 +236,7 @@ html, body {
 .btn-solid:hover { background: var(--pink); }
 
 /* ── Hero：只有一个焦点 ── */
-.hero { position: relative; padding: clamp(4rem, 9vw, 8rem) 0 6rem; }
+.hero { position: relative; padding: clamp(4rem, 9vw, 8rem) 0 1.2rem; }
 .pop-grid {
     display: grid; grid-template-columns: 1.05fr .95fr;
     gap: clamp(2rem, 5vw, 5rem); align-items: center;
@@ -319,8 +319,8 @@ html, body {
 .wave-sep path { fill: var(--blue); }
 
 /* ── 文章档案 ── */
-.feed { padding: 5.5rem 0 6rem; position: relative; z-index: 1; }
-.section-head { text-align: center; margin-bottom: 3.2rem; }
+.feed { padding: 2.2rem 0 6rem; position: relative; z-index: 1; }
+.section-head { text-align: center; margin-bottom: 2.6rem; }
 .section-kicker {
     display: inline-block; font-family: var(--pop); font-size: .72rem; font-weight: 800;
     letter-spacing: .18em; color: var(--ink); background: var(--mint);
@@ -921,7 +921,7 @@ html, body {
 /* ── ③ 手绘分隔线：墨线主干 + 撞色虚线 + 中心星芒，宽度对齐正文 ── */
 .hand-divider {
     display: block; position: relative;
-    width: min(1120px, calc(100vw - 4rem)); margin: 2.2rem auto;
+    width: min(1120px, calc(100vw - 4rem)); margin: 1rem auto .8rem;
     height: 96px;
 }
 .hand-divider > svg { display: block; width: 100%; height: 100%; overflow: visible; }

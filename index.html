@@ -1250,7 +1250,7 @@
     </style>
     <!-- 亮色动漫撞色主题：后置于内联样式，同名规则覆盖暗色 BLOG LAYER；
          移除这一行即可一键回退到上一版深空主题 -->
-    <link rel="stylesheet" href="theme.css?v=20261116c" />
+    <link rel="stylesheet" href="theme.css?v=20261118a" />
 </head>
 <body>
 
@@ -2204,7 +2204,18 @@
             });
         }
 
+        // 门扉底下的页面状态（'' = 主页 / '#post/...' = 文章 / '#404' = 死链落地）。
+        // 关闭门扉时用它还原 URL 真话。
+        let preGateHash = null;
+
         function showGate() {
+            // URL 真话铁律：门扉态统一叫 #wander（含 #404 死链落地，落地即归一）。
+            // replaceState 不进历史栈、不触发 hashchange，纯地址栏改名。
+            if (location.hash !== '#wander') {
+                preGateHash = location.hash || '';
+                try { history.replaceState(null, '', '#wander'); }
+                catch (err) { location.hash = '#wander'; }
+            }
             resetCard();
             errorOverlay.classList.remove('hidden');
             void errorOverlay.offsetWidth;   // 强制 reflow，保证淡入动画每次都能重播
@@ -2214,6 +2225,7 @@
 
         function hideGate(instant) {
             if (errorOverlay.classList.contains('hidden')) return;
+            preGateHash = null;              // 非关闭按钮路径离开门扉时，丢弃还原记忆
             errorOverlay.classList.remove('active');
             setTimeout(() => {
                 if (!errorOverlay.classList.contains('active')) {
@@ -2226,9 +2238,13 @@
 
         function clearGateHash() {
             const h = location.hash;
-            if (h === '#404' || h === '#wander') {
-                try { history.replaceState(null, '', location.pathname + location.search); }
-                catch (err) { location.hash = '#home'; }   // file:// 下 replaceState 可能受限
+            if (h === '#wander' || h === '#404') {
+                // 回到门扉底下的真实页面：文章态恢复 #post/ 深链，否则归一成裸域名
+                const back = (preGateHash && preGateHash.startsWith('#post/')) ? preGateHash : '';
+                preGateHash = null;
+                try {
+                    history.replaceState(null, '', back || location.pathname.replace(/index\.html$/, ''));
+                } catch (err) { location.hash = back || '#home'; }
             }
         }
 
@@ -2437,6 +2453,8 @@
             e.preventDefault();
             resetCard();
             errorOverlay.classList.remove('active');
+            // 还原门扉底下的页面：文章态要同时恢复 URL 与阅读层
+            const wasReading = preGateHash && preGateHash.startsWith('#post/');
             clearGateHash();
             setTimeout(() => {
                 if (!errorOverlay.classList.contains('active')) {
@@ -2445,8 +2463,10 @@
                 }
                 syncBodyLock();
             }, 600);
-            // 从服务器死链 (#404) 回来时，恢复成干净的博客首页
-            if (!location.hash.startsWith('#post/')) {
+            if (wasReading) {
+                openReader(decodeURIComponent(location.hash.slice(6)));   // 重新点亮文章层
+            } else {
+                // 从死链 (#404/#wander) 回来时，恢复成干净的博客首页
                 activeCat = 'all'; query = ''; $('post-search').value = '';
                 renderFilters(); renderPosts();
             }
