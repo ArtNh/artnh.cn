@@ -1279,11 +1279,11 @@
                 <span class="brand-sub">CUI JIN-LIN <i>/</i> NPR JOURNAL</span>
             </a>
             <nav class="site-nav" aria-label="主导航">
-                <a href="#home" data-nav="home">首页</a>
+                <a href="#home" data-nav="home" id="nav-home">首页</a>
                 <a href="archive.html?cat=works">作品</a>
                 <a href="archive.html?cat=notes">笔记</a>
                 <a href="archive.html?cat=tutorials">教程</a>
-                <a href="#about" data-nav="about">关于</a>
+                <a href="#about" data-nav="about" id="nav-about">关于</a>
             </nav>
             <button class="wander-chip" id="btn-wander-gate" title="进入迷航与邂逅 · 宇宙门扉">
                 <span class="wander-dot"></span><span>Wander</span>
@@ -2256,17 +2256,37 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
-        // 左上角 logo：与「回到顶部」同款行为 —— 平滑滚回主页顶部，不改 hash
-        // （阅读层开着时先关层，否则滚顶看不到东西）
-        $('brand-home').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!reader.hidden) { location.hash = '#home'; return; }
+        // 高亮同步：不走 hash 的导航（首页/关于/logo）手动更新 is-current
+        function syncNavCurrent(hash) {
+            document.querySelectorAll('.site-nav a').forEach(a => {
+                a.classList.toggle('is-current', a.getAttribute('href') === hash);
+            });
+        }
+
+        // 回主页顶部：logo 与顶部「首页」共用 —— 从 #about / 文章层回来时顺手复位状态再滚顶
+        // （原 bug：#about → 点首页时 hash 虽变，但 route() 不滚顶，肉眼看着像没反应）
+        function goHomeTop() {
+            if (location.hash && location.hash !== '#home') location.hash = '#home';
+            syncNavCurrent('#home');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 左上角 logo：与「回到顶部」同款行为
+        $('brand-home').addEventListener('click', (e) => { e.preventDefault(); goHomeTop(); });
+        // 顶部「首页」：从任何位置（含 #about 残留）都真正回到主页顶部
+        $('nav-home').addEventListener('click', (e) => { e.preventDefault(); goHomeTop(); });
+
+        // 顶部「关于」：平滑滚到页底关于区，不走 hash（URL 不再留下 #about，也不会重排档案）
+        $('nav-about').addEventListener('click', (e) => {
+            e.preventDefault();
+            syncNavCurrent('#about');
+            $('about').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
-        // Hero「关于我」：平滑滚到页底关于区，不走 hash 路由（避免收起已展开的档案）
+        // Hero「关于我」：同上
         $('btn-about').addEventListener('click', (e) => {
             e.preventDefault();
+            syncNavCurrent('#about');
             $('about').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
