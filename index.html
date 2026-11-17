@@ -2125,7 +2125,7 @@
 
         function openReader(slug) {
             const p = POSTS.find(x => x.slug === slug);
-            if (!p) { location.hash = '#home'; return; }
+            if (!p) { closeReader(); cleanHomeUrl(); return; }
             const c = catOf(p);
             const idx = POSTS.indexOf(p);
             const prev = POSTS[idx - 1], next = POSTS[idx + 1];
@@ -2233,7 +2233,7 @@
                     const c = hash.slice(10);
                     if (catById[c]) activeCat = c;
                     showAll = true;              // 直接点栏目 = 要看这一类的全部
-                } else if (hash === '' || hash === '#home' || hash === '#all') {
+                } else if (hash === '' || hash === '#home' || hash === '#all' || hash === '#feed') {
                     activeCat = 'all';
                     showAll = false;
                 }
@@ -2242,10 +2242,11 @@
                 if (hash === '#about') {
                     setTimeout(() => $('about').scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
                 }
+                // 地址栏净化：#home / #feed / #about / #all 都是「主页态」，落地后立即
+                // 把 URL 抹成裸域名（保留 #category/ 功能链）；#post/ 保留供刷新与分享。
+                if (['#home', '#feed', '#about', '#all'].includes(hash)) cleanHomeUrl();
             }
-            document.querySelectorAll('.site-nav a').forEach(a => {
-                a.classList.toggle('is-current', a.getAttribute('href') === (hash || '#home'));
-            });
+            syncNavCurrent(hash || '#home');
         }
 
         /* ── 交互绑定 ── */
@@ -2263,10 +2264,26 @@
             });
         }
 
-        // 回主页顶部：logo 与顶部「首页」共用 —— 从 #about / 文章层回来时顺手复位状态再滚顶
-        // （原 bug：#about → 点首页时 hash 虽变，但 route() 不滚顶，肉眼看着像没反应）
+        // 地址栏净化：主页任何状态下，URL 只显示干净域名（artnh.cn）。
+        // http(s) 下连 /index.html 一起归一成 /；file:// 双击时跨路径 replaceState 会被
+        // 安全策略拦下，降级为只抹 hash（路径保留，本地预览不受影响）。
+        function cleanHomeUrl() {
+            try {
+                history.replaceState(null, '', location.pathname.replace(/index\.html$/, '') + location.search);
+            } catch (err) {
+                try { history.replaceState(null, '', location.pathname + location.search); } catch (e2) {}
+            }
+        }
+
+        // 回主页顶部：logo 与顶部「首页」共用 —— 手动复位到首页态 + 净化 URL + 平滑滚顶。
+        // （不再写 #home hash：地址栏保持 artnh.cn 干净裸域名）
         function goHomeTop() {
-            if (location.hash && location.hash !== '#home') location.hash = '#home';
+            closeReader();
+            activeCat = 'all'; query = '';
+            const searchBox = $('post-search'); if (searchBox) searchBox.value = '';
+            showAll = false;
+            renderFilters(); renderPosts();
+            cleanHomeUrl();
             syncNavCurrent('#home');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2370,7 +2387,12 @@
             activeCat = 'all'; query = ''; $('post-search').value = '';
             renderFilters(); renderPosts();
         });
-        $('reader-back').addEventListener('click', () => { location.hash = '#home'; });
+        $('reader-back').addEventListener('click', () => {
+            closeReader();
+            syncBodyLock();
+            cleanHomeUrl();          // 关文章回主页：URL 归一成裸域名，不留 #post 尾巴
+            syncNavCurrent('#home');
+        });
         $('reader-gate').addEventListener('click', showGate);
 
         btnWanderGate.addEventListener('click', (e) => {
