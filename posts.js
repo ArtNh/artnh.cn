@@ -10,6 +10,12 @@
  *  category 可选：works 作品 / notes 笔记 / tutorials 教程 /
  *                inspiration 素材 / lab 实验室
  *  featured: true 会让文章占两列大卡（建议同时最多 2 篇）。
+ *
+ *  ★ slug 命名铁律（2026-11-18 起，index.html 引擎自动校验）：
+ *    /^[a-z0-9]+(-[a-z0-9]+)*$/ —— 纯小写字母/数字，连字符分段。
+ *    禁止：中文 / 大写 / 下划线 / 空格 / 首尾连字符 / 连续连字符。
+ *    slug 是文章态唯一深链 artnh.cn/#post/<slug>，违规会进控制台报错。
+ *    示例：blender-movie-projector ✓   Movie_Projector ✗
  * ============================================================ */
 
 window.BLOG_META = {

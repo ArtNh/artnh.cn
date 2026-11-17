@@ -213,7 +213,9 @@
 
       $('arc-grid').innerHTML = list.map((p, i) => {
         const c = catOf(p);
-        return `<a class="arc-card" href="index.html?from=archive#post/${encodeURIComponent(p.slug)}"
+        // 来源标记走 sessionStorage（postFrom=archive），URL 保持 artnh.cn/#post/<slug> 纯净
+        return `<a class="arc-card" href="index.html#post/${encodeURIComponent(p.slug)}"
+            data-mark-from="1"
             style="--c:${c.color};--tilt:${tilts[i % tilts.length]}deg">
           <div class="arc-art">
             <svg viewBox="0 0 300 150" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${coverFor(p, i)}</svg>
@@ -228,6 +230,13 @@
         </a>`;
       }).join('');
       $('arc-empty').hidden = list.length > 0;
+
+      // 卡片点击时打「来自档案页」标记，供 index.html 的「← 返回档案」定向
+      $('arc-grid').querySelectorAll('.arc-card').forEach(a => {
+        a.addEventListener('click', () => {
+          try { sessionStorage.setItem('postFrom', 'archive'); } catch (e) {}
+        });
+      });
     }
 
     $('arc-q').addEventListener('input', render);

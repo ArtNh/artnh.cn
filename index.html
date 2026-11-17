@@ -1989,6 +1989,24 @@
             nodes.forEach(n => io.observe(n));
         }
 
+        /* ── slug 命名规则守卫（2026-11-18 铁律）─────────────────
+           文章态 hash 是全站唯一深链：#post/<slug>，slug 必须匹配
+           /^[a-z0-9]+(-[a-z0-9]+)*$/ —— 纯小写字母/数字、连字符分段、
+           不许下划线/中文/大写/首尾连字符。违规者控制台报错（开发期），
+           新文章在 posts.js 里照现有 slug 风格命名即可。 ── */
+        (() => {
+            const SLUG_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+            POSTS.forEach(p => {
+                if (!SLUG_RE.test(p.slug)) {
+                    console.error('[slug 规范违规]', p.slug,
+                        '—— 必须是纯小写-连字符（如 blender-movie-projector），',
+                        '否则 #post/ 深链无法稳定分享。');
+                }
+            });
+            const dup = POSTS.map(p => p.slug).filter((s, i, a) => a.indexOf(s) !== i);
+            if (dup.length) console.error('[slug 重复]', dup);
+        })();
+
         /* ── 分类筛选 ── */
         function renderFilters() {
             $('filter-row').innerHTML = CATS.map(c => {
@@ -2265,14 +2283,16 @@
             });
         }
 
-        // 地址栏净化：主页任何状态下，URL 只显示干净域名（artnh.cn）。
-        // http(s) 下连 /index.html 一起归一成 /；file:// 双击时跨路径 replaceState 会被
-        // 安全策略拦下，降级为只抹 hash（路径保留，本地预览不受影响）。
+        // 地址栏规范（全站铁律 2026-11-18）：
+        //   主页态  artnh.cn/               （一切主页状态落地即归一）
+        //   文章态  artnh.cn/#post/<slug>   （唯一保留的深链，slug = 小写-连字符）
+        //   档案态  artnh.cn/archive        （archive.html 内部自行归一）
+        // 本函数把路径与查询串一并归一（index.html / ?from=... 等全部抹掉），hash 由调用方决定去留。
         function cleanHomeUrl() {
             try {
-                history.replaceState(null, '', location.pathname.replace(/index\.html$/, '') + location.search);
+                history.replaceState(null, '', location.pathname.replace(/index\.html$/, ''));
             } catch (err) {
-                try { history.replaceState(null, '', location.pathname + location.search); } catch (e2) {}
+                try { history.replaceState(null, '', location.pathname); } catch (e2) {}
             }
         }
 
@@ -2388,12 +2408,12 @@
             activeCat = 'all'; query = ''; $('post-search').value = '';
             renderFilters(); renderPosts();
         });
-        // 「← 返回档案」：文章从哪来回哪去。只有从主页精选区打开的才回主页，
-        // 从档案独立页进来的回 archive.html（保持 ?cat= 语境）。
-        let openedFromArchive = false;      // 档案页跳转进来时由 URL 参数标记
-        (() => {
-            const params = new URLSearchParams(location.search);
-            if (params.get('from') === 'archive') openedFromArchive = true;
+        // 「← 返回档案」：文章从哪来回哪去。来源标记走 sessionStorage（URL 不留任何尾巴）：
+        // 档案页跳文章前写入 postFrom=archive；只有带这个标记的才回档案独立页。
+        const openedFromArchive = (() => {
+            const v = sessionStorage.getItem('postFrom') === 'archive';
+            sessionStorage.removeItem('postFrom');      // 一次性：读完即焚
+            return v;
         })();
         $('reader-back').addEventListener('click', () => {
             if (openedFromArchive) {
