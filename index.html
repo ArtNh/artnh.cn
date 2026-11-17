@@ -1514,7 +1514,7 @@
 
     <!-- 文章数据层：用 script 标签加载，双击 index.html（file://）也能跑；
          若改用 fetch + posts.json，本地协议会被 CORS 拦下 -->
-    <script src="posts.js?v=20261116d"></script>
+    <script src="posts.js?v=20261117a"></script>
 
     <!-- ── JavaScript：星尘渲染、博客渲染与无刷新单页路由 ── -->
     <script>
@@ -2005,16 +2005,21 @@
             });
         }
 
-        /* ── 文章网格：默认精选 4 篇，展开才给全部 ── */
+        /* ── 文章网格：默认精选 4~6 篇，展开才给全部 ── */
         function visiblePosts() {
             const q = query.trim().toLowerCase();
             const picked = META.picked || [];
-            return POSTS.filter(p => {
+            const list = POSTS.filter(p => {
                 if (!showAll && !picked.includes(p.slug)) return false;   // 首屏做减法
                 if (activeCat !== 'all' && p.category !== activeCat) return false;
                 if (!q) return true;
                 return [p.title, p.subtitle, p.excerpt, ...(p.tags || [])].join(' ').toLowerCase().includes(q);
-            }).sort((a, b) => sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
+            });
+            if (!showAll) {
+                // 首页精选按 picked 数组顺序摆座次（策展排序，日期只管档案页）
+                return list.sort((a, b) => picked.indexOf(a.slug) - picked.indexOf(b.slug));
+            }
+            return list.sort((a, b) => sortDesc ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
         }
 
         /* ── 手绘封面：6 套基础图案 + 按 slug 派生的镜像 / 旋转 / 点缀，保证每篇都不同 ── */
