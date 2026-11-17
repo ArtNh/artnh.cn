@@ -1274,15 +1274,15 @@
     <div id="blog-app">
 
         <header class="site-header">
-            <a class="brand" href="#home" aria-label="回到博客首页">
+            <a class="brand" href="#home" id="brand-home" aria-label="回到博客主页顶部">
                 <span class="brand-mark">ARTNH</span>
                 <span class="brand-sub">CUI JIN-LIN <i>/</i> NPR JOURNAL</span>
             </a>
             <nav class="site-nav" aria-label="主导航">
                 <a href="#home" data-nav="home">首页</a>
-                <a href="#category/works" data-nav="works">作品</a>
-                <a href="#category/notes" data-nav="notes">笔记</a>
-                <a href="#category/tutorials" data-nav="tutorials">教程</a>
+                <a href="archive.html?cat=works">作品</a>
+                <a href="archive.html?cat=notes">笔记</a>
+                <a href="archive.html?cat=tutorials">教程</a>
                 <a href="#about" data-nav="about">关于</a>
             </nav>
             <button class="wander-chip" id="btn-wander-gate" title="进入迷航与邂逅 · 宇宙门扉">
@@ -1300,8 +1300,8 @@
                         <h1 class="pop-title">把空间<br><span class="wobble">渲成风格</span><span class="bang">!</span></h1>
                         <p class="pop-desc">环境设计出身，现在在 Blender 里折腾 <span class="nowrap">NPR / 三渲二</span>。<br>这里放作品、绑骨实验，和每天捡回来的审美碎片。</p>
                         <div class="pop-actions">
-                            <a class="btn btn-solid" href="#feed">看文章 ↗</a>
-                            <a class="btn btn-ghost" href="#about">关于我 ✦</a>
+                            <a class="btn btn-solid" href="archive.html">看文章 ↗</a>
+                            <a class="btn btn-ghost" href="#about" id="btn-about">关于我 ✦</a>
                         </div>
                         <span class="scribble">scroll down</span>
                     </div>
@@ -2254,6 +2254,20 @@
         $('to-top').addEventListener('click', (e) => {
             e.preventDefault();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 左上角 logo：与「回到顶部」同款行为 —— 平滑滚回主页顶部，不改 hash
+        // （阅读层开着时先关层，否则滚顶看不到东西）
+        $('brand-home').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!reader.hidden) { location.hash = '#home'; return; }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Hero「关于我」：平滑滚到页底关于区，不走 hash 路由（避免收起已展开的档案）
+        $('btn-about').addEventListener('click', (e) => {
+            e.preventDefault();
+            $('about').scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
 
         // 全局鼠标点击：彩色星点迸发 + 扩散圆环
